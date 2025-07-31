@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IG APAC Marketing Performance Dashboard - July 2025</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #E3252C 0%, #c91f25 100%);
+            color: white;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .tabs {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            color: #666;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+        
+        .tab:hover {
+            color: #E3252C;
+            background: rgba(227, 37, 44, 0.05);
+        }
+        
+        .tab.active {
+            color: #E3252C;
+            font-weight: 600;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #E3252C;
+        }
+        
+        .content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            border-color: #E3252C;
+        }
+        
+        .card h2 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .card h3 {
+            color: #555;
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .card p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        
+        .card strong {
+            color: #333;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            border-color: #E3252C;
+            box-shadow: 0 4px 15px rgba(227, 37, 44, 0.1);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #E3252C;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-change {
+            font-size: 1rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+        }
+        
+        .metric-change.positive {
+            color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+        }
+        
+        .metric-change.negative {
+            color: #dc3545;
+            background: rgba(220, 53, 69, 0.1);
+        }
+        
+        .metric-change.neutral {
+            color: #007bff;
+            background: rgba(0, 123, 255, 0.1);
+        }
+        
+        .insight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #E3252C;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        
+        .insight-box h4 {
+            color: #E3252C;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .insight-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .insight-box li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 1.5rem;
+            color: #666;
+        }
+        
+        .insight-box li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #E3252C;
+            font-weight: bold;
+        }
+        
+        .insight-box li strong {
+            color: #333;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 2rem 0;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 20px;
+            height: 24px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #E3252C 0%, #ff6b70 100%);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 1rem;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: width 0.5s ease;
+        }
+        
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .achievement-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .achievement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #E3252C 0%, #ff6b70 100%);
+        }
+        
+        .achievement-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .badge.complete {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .badge.in-progress {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ff9800;
+        }
+        
+        .badge.new {
+            background: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+        }
+        
+        .section-divider {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .sub-section {
+            margin-left: 2rem;
+            padding-left: 1rem;
+            border-left: 2px solid #e9ecef;
+        }
+        
+        .note {
+            margin-top: 1rem;
+            color: #999;
+            font-style: italic;
+        }
+        
+        .text-success {
+            color: #28a745 !important;
+        }
+        
+        .text-warning {
+            color: #ff9800 !important;
+        }
+        
+        .text-danger {
+            color: #dc3545 !important;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .tabs {
+                overflow-x: scroll;
+            }
+            
+            .tab {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+            
+            .metric-value {
+                font-size: 2rem;
+            }
+            
+            .sub-section {
+                margin-left: 1rem;
+                padding-left: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>IG APAC Marketing Performance Dashboard</h1>
+        <p>July 2025 | Team Performance Review</p>
+    </div>
+    
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('overview')">Executive Overview</button>
+        <button class="tab" onclick="showTab('social')">Social Media</button>
+        <button class="tab" onclick="showTab('organic')">Organic Growth</button>
+        <button class="tab" onclick="showTab('education')">Education</button>
+        <button class="tab" onclick="showTab('roadmap')">Looking Ahead</button>
+    </div>
+    
+    <div class="content">
+        <!-- Executive Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="card">
+                <h2>🎯 July Performance Highlights</h2>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Post Link Clicks</div>
+                        <div class="metric-value">70.9K</div>
+                        <div class="metric-change positive">Social Media</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-label">Audience Growth</div>
+                        <div class="metric-value">+326.4%</div>
+                        <div class="metric-change positive">Outstanding</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-label">Content Published</div>
+                        <div class="metric-value">29</div>
+                        <div class="metric-change neutral">SEO Articles</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-label">Pages Updated</div>
+                        <div class="metric-value">31+</div>
+                        <div class="metric-change positive">IG.COM Progress</div>
+                    </div>
+                </div>
+                
+                <div class="achievement-grid">
+                    <div class="achievement-card">
+                        <div class="achievement-title">🏆 Major Achievements</div>
+                        <div class="badge complete">Complete</div>
+                        <p>Singapore top 25 pages updated</p>
+                        <div class="badge in-progress">80% Adoption</div>
+                        <p>New collaborative content model</p>
+                    </div>
+                    
+                    <div class="achievement-card">
+                        <div class="achievement-title">🚀 Key Initiatives</div>
+                        <div class="badge new">New</div>
+                        <p>Google Analytics + Sprout Social integration</p>
+                        <div class="badge in-progress">In Progress</div>
+                        <p>IG One product page development</p>
+                    </div>
+                    
+                    <div class="achievement-card">
+                        <div class="achievement-title">📚 Education Expansion</div>
+                        <div class="badge new">Launching</div>
+                        <p>"Tools for Traders" course</p>
+                        <div class="badge in-progress">Development</div>
+                        <p>Charting Essentials for advanced traders</p>
+                    </div>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>💡 Executive Summary</h4>
+                    <ul>
+                        <li><strong>Social Media Excellence:</strong> 326.4% audience growth with new collaborative content model achieving 80% adoption</li>
+                        <li><strong>Content Velocity:</strong> 29 SEO articles published, Singapore content update complete, Australia progressing well</li>
+                        <li><strong>Strategic Integration:</strong> Google Analytics + Sprout Social integration underway for end-to-end tracking</li>
+                        <li><strong>Education Focus:</strong> Multiple courses in development targeting beginners and advanced traders</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>📊 Team Performance Overview</h2>
+                <div class="chart-container">
+                    <canvas id="teamPerformanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Social Media Tab -->
+        <div id="social" class="tab-content">
+            <div class="card">
+                <h2>📱 Social Media Performance</h2>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Total Post Link Clicks</div>
+                        <div class="metric-value">70,852</div>
+                        <div class="metric-change positive">Strong Engagement</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-label">Audience Growth</div>
+                        <div class="metric-value">+326.4%</div>
+                        <div class="metric-change positive">Exceptional</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-label">Content Model Adoption</div>
+                        <div class="metric-value">80%</div>
+                        <div class="metric-change positive">On Track</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-label">Integration Progress</div>
+                        <div class="metric-value">In Progress</div>
+                        <div class="metric-change neutral">GA + Sprout</div>
+                    </div>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>🎯 Strategic Alignment</h4>
+                    <ul>
+                        <li><strong>New Content Model:</strong> Collaborative approach bringing teams closer to markets for timely, relevant content</li>
+                        <li><strong>Real-time Balance:</strong> Maintaining evergreen content while adding real-time relevance</li>
+                        <li><strong>80% Adoption:</strong> Strong team buy-in with continued refinement as we embed further</li>
+                    </ul>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>📈 Reporting Optimisation</h4>
+                    <ul>
+                        <li><strong>GA + Sprout Integration:</strong> Enabling end-to-end tracking of social content's impact on web traffic</li>
+                        <li><strong>Conversion Tracking:</strong> Clearer view of which content and platforms drive business outcomes</li>
+                        <li><strong>Data-Driven Insights:</strong> Moving toward more consistent, insight-driven improvements</li>
+                    </ul>
+                </div>
+                
+                <div class="card" style="background: #f8f9fa;">
+                    <h3>Content Performance Analysis</h3>
+                    <p>Content showing improvement across the division with:</p>
+                    <ul style="list-style: disc; padding-left: 2rem; color: #666;">
+                        <li>Testing and learning across formats</li>
+                        <li>Focus on customer retention through audience growth</li>
+                        <li>Moving toward measurable business outcomes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Organic Growth Tab -->
+        <div id="organic" class="tab-content">
+            <div class="card">
+                <h2>🌱 Organic Growth Performance</h2>
+                
+                <div class="section-divider">IG.COM Updates</div>
+                
+                <div class="achievement-grid">
+                    <div class="achievement-card">
+                        <div class="achievement-title">🇸🇬 Singapore</div>
+                        <div class="badge complete">Complete</div>
+                        <p><strong>Milestone Achieved:</strong> Top 25 performing brochure pages updated with new design and components</p>
+                    </div>
+                    
+                    <div class="achievement-card">
+                        <div class="achievement-title">🇦🇺 Australia</div>
+                        <div class="badge in-progress">6 Pages Done</div>
+                        <p><strong>Progress:</strong> CFD Trading and MT4 brochure pages among 6 completed updates</p>
+                    </div>
+                    
+                    <div class="achievement-card">
+                        <div class="achievement-title">📝 Copy Improvements</div>
+                        <div class="badge complete">Approved</div>
+                        <p><strong>APAC Cluster:</strong> All top performing brochure pages copy approved for SG, AU, UAE</p>
+                    </div>
+                </div>
+                
+                <div class="sub-section">
+                    <h3>Component Improvements</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%;">Batch 1: 5/5 Complete</div>
+                    </div>
+                    <p style="color: #666;">Working with Dev team to improve new components. Batch 2 improvements in progress.</p>
+                </div>
+                
+                <div class="section-divider">SEO/ASO/CRO Performance</div>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">SEO BAU Content</div>
+                        <div class="metric-value">15</div>
+                        <div class="metric-change neutral">Published Internally</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-label">Freelancer Content</div>
+                        <div class="metric-value">14</div>
+                        <div class="metric-change neutral">Published</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-label">CRO Experiments</div>
+                        <div class="metric-value">7</div>
+                        <div class="metric-change positive">Running</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-label">ASO Updates</div>
+                        <div class="metric-value">2</div>
+                        <div class="metric-change neutral">Markets</div>
+                    </div>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>🔍 SEO Initiatives</h4>
+                    <ul>
+                        <li><strong>IG One:</strong> Product page and Singapore homepage in final development stage</li>
+                        <li><strong>Performance Project:</strong> External audit delivered, implementing Google Knowledge Panel and Schema Markups</li>
+                        <li><strong>Content Production:</strong> 29 total pieces published (15 internal + 14 freelancer)</li>
+                    </ul>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>📱 ASO Progress</h4>
+                    <ul>
+                        <li><strong>UAE:</strong> Screenshots updated</li>
+                        <li><strong>Australia:</strong> New screenshots with $0 commission and PayID awaiting release</li>
+                    </ul>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>🧪 CRO Updates</h4>
+                    <ul>
+                        <li><strong>Current Tests:</strong> 7 experiments running on Australian site</li>
+                        <li><strong>Tracking Fixed:</strong> Optimizely discrepancy resolved, future tests will use statistical analysis</li>
+                        <li><strong>Next Steps:</strong> New tests planned for early August after current tests close</li>
+                    </ul>
+                </div>
+                
+                <div class="insight-box" style="background: #e3f2fd; border-color: #2196F3;">
+                    <h4 style="color: #2196F3;">🤖 GEO (Generative Engine Optimisation)</h4>
+                    <ul>
+                        <li><strong>AI/LLM Tracking:</strong> Working with data team to improve GA4 dashboard for AI traffic insights</li>
+                        <li><strong>Future Focus:</strong> Experimentation planned to improve visibility from AI and LLMs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Education Tab -->
+        <div id="education" class="tab-content">
+            <div class="card">
+                <h2>📚 Education Initiatives</h2>
+                
+                <div class="achievement-grid">
+                    <div class="achievement-card">
+                        <div class="achievement-title">Tools for Traders</div>
+                        <div class="badge new">Publishing</div>
+                        <p><strong>Target:</strong> Beginners</p>
+                        <p><strong>Focus:</strong> Demo account utility</p>
+                        <p><strong>Status:</strong> Publishing for Singapore, video content live in AU/UAE</p>
+                    </div>
+                    
+                    <div class="achievement-card">
+                        <div class="achievement-title">Placing Your First Trade</div>
+                        <div class="badge in-progress">In Progress</div>
+                        <p><strong>Guide Type:</strong> Beginner's Guide</p>
+                        <p><strong>Status:</strong> Publishing for AU, approval for SG/UAE</p>
+                        <p><strong>Video:</strong> Platform walkthrough nearly finalised</p>
+                    </div>
+                    
+                    <div class="achievement-card">
+                        <div class="achievement-title">Charting Essentials</div>
+                        <div class="badge new">In Design</div>
+                        <p><strong>Level:</strong> Advanced</p>
+                        <p><strong>Target:</strong> Experienced IG Markets traders</p>
+                        <p><strong>Status:</strong> Content finalised, video in production</p>
+                    </div>
+                </div>
+                
+                <div class="section-divider">Regional Content Expansion</div>
+                
+                <div class="card" style="background: #f8f9fa;">
+                    <h3>A Beginner's Guide to Forex Trading</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%;">UAE: Live</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%;">Singapore: Mid-August</div>
+                    </div>
+                    <p style="color: #666; margin-top: 1rem;">Fresh, mobile-optimised video content produced. Videos going live in Australia, being localised for Singapore and UAE markets.</p>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>🎯 Content Optimisation</h4>
+                    <ul>
+                        <li><strong>Content Cleanup:</strong> Hours of dated video content removed to make space for fresh content</li>
+                        <li><strong>Demo CTAs:</strong> Implemented across all new courses</li>
+                        <li><strong>Mobile Focus:</strong> All new video content optimised for mobile viewing</li>
+                    </ul>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>📅 Q2 Development Focus</h4>
+                    <ul>
+                        <li><strong>Beginner Content:</strong> Crypto and AI content in planning</li>
+                        <li><strong>Investment Foundations:</strong> New foundational content for investors</li>
+                        <li><strong>Advanced Localisation:</strong> Localising advanced courses for high-value IG Markets traders</li>
+                        <li><strong>Performance Framework:</strong> Developing reliable measurement framework with Data Analytics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Looking Ahead Tab -->
+        <div id="roadmap" class="tab-content">
+            <div class="card">
+                <h2>🔮 Looking Ahead: FY26 Roadmap</h2>
+                
+                <div class="insight-box">
+                    <h4>📱 Social Media Focus</h4>
+                    <ul>
+                        <li><strong>Metrics that Move:</strong> Focus on business-driving metrics</li>
+                        <li><strong>Content that Converts:</strong> Prioritise conversion-focused content</li>
+                        <li><strong>Insights that Matter:</strong> Data-driven decision making</li>
+                        <li><strong>Strategies that Scale:</strong> Building scalable processes</li>
+                    </ul>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>🌐 Organic Growth Priorities</h4>
+                    <ul>
+                        <li><strong>Complete AU Updates:</strong> Finish remaining top 25 pages for Australia</li>
+                        <li><strong>Cluster Pages:</strong> Move to cluster pages copy updates</li>
+                        <li><strong>Tech SEO:</strong> Implement recommendations from performance audit</li>
+                        <li><strong>AI/LLM Visibility:</strong> Launch experiments based on GEO insights</li>
+                    </ul>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>📚 Education Roadmap</h4>
+                    <ul>
+                        <li><strong>Course Launches:</strong> Complete current courses in pipeline</li>
+                        <li><strong>Q2 Development:</strong> Launch crypto, AI, and investment content</li>
+                        <li><strong>Performance Tracking:</strong> Implement new measurement framework</li>
+                        <li><strong>Regional Expansion:</strong> Continue localisation efforts</li>
+                    </ul>
+                </div>
+                
+                <div class="insight-box" style="background: #ffebee; border-color: #dc3545;">
+                    <h4 style="color: #dc3545;">🚨 Key Dependencies</h4>
+                    <ul>
+                        <li><strong>Dev Support:</strong> Required for component improvements and CRO implementation</li>
+                        <li><strong>Tech SEO Resources:</strong> Needed for performance project recommendations</li>
+                        <li><strong>Data Analytics:</strong> Critical for education performance framework</li>
+                    </ul>
+                </div>
+                
+                <div class="card" style="background: #f8f9fa; margin-top: 2rem;">
+                    <h3>Next Month Priorities</h3>
+                    <ol style="padding-left: 2rem; color: #666;">
+                        <li>Complete Google Analytics + Sprout Social integration</li>
+                        <li>Launch IG One product page</li>
+                        <li>Close current CRO tests and launch new experiments</li>
+                        <li>Release Australia ASO updates</li>
+                        <li>Finalise education performance measurement framework</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching functionality
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        // Create Team Performance Chart
+        const ctxTeam = document.getElementById('teamPerformanceChart')?.getContext('2d');
+        if (ctxTeam) {
+            new Chart(ctxTeam, {
+                type: 'bar',
+                data: {
+                    labels: ['Social Media', 'SEO Content', 'IG.COM Updates', 'Education Courses', 'CRO Tests'],
+                    datasets: [{
+                        label: 'Completed',
+                        data: [80, 29, 31, 3, 7],
+                        backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: 'In Progress',
+                        data: [20, 0, 19, 4, 3],
+                        backgroundColor: 'rgba(255, 152, 0, 0.8)',
+                        borderColor: 'rgba(255, 152, 0, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'July 2025 Deliverables Status',
+                            font: { size: 18, weight: 600 },
+                            color: '#333'
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#333'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            ticks: {
+                                color: '#666'
+                            },
+                            grid: {
+                                color: '#e9ecef'
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#666'
+                            },
+                            grid: {
+                                color: '#e9ecef'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
