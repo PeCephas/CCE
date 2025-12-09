@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>APAC &amp; ME Content &amp; Customer Engagement Dashboard - Q2 FY26</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f8f9fa; color: #333; line-height: 1.6; font-size: 14px; }
+        p, li, ul, ol, td, div, span { font-family: Arial, sans-serif; font-size: 14px; }
+
+        /* Header */
+        .header { background: linear-gradient(135deg, #E3252C 0%, #c91f25 100%); color: white; padding: 20px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 24px; font-weight: 600; }
+        .header .subtitle { font-size: 14px; opacity: 0.9; margin-top: 4px; }
+        .logo-container { background: white; padding: 8px 12px; border-radius: 8px; height: 70px; display: flex; align-items: center; }
+        .logo-img { height: 64px; width: auto; }
+
+        /* Navigation */
+        .nav-tabs { background: white; padding: 0 40px; border-bottom: 1px solid #dee2e6; display: flex; gap: 0; overflow-x: auto; }
+        .nav-tab { padding: 15px 30px; cursor: pointer; border: none; background: none; color: #666; font-size: 14px; font-weight: 500; position: relative; transition: all 0.3s ease; white-space: nowrap; }
+        .nav-tab:hover { color: #E3252C; background: rgba(227, 37, 44, 0.05); }
+        .nav-tab.active { color: #E3252C; background: rgba(227, 37, 44, 0.08); }
+        .nav-tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 3px; background: #E3252C; }
+
+        /* Content */
+        .content { padding: 30px 40px; max-width: 1400px; margin: 0 auto; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .card { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 24px; }
+        .card-title { font-size: 18px; font-weight: 600; color: #333; }
+
+        /* CRM Performance Tabs */
+        .performance-tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #dee2e6; }
+        .performance-tab { padding: 8px 16px; background: none; border: none; color: #666; cursor: pointer; font-size: 13px; font-weight: 500; border-radius: 6px 6px 0 0; transition: all 0.3s ease; border-bottom: 3px solid transparent; }
+        .performance-tab:hover { background: rgba(227, 37, 44, 0.05); }
+        .performance-tab.active { color: #E3252C; border-bottom-color: #E3252C; background: rgba(227, 37, 44, 0.08); }
+
+        /* Metrics Grid */
+        .metrics-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+        .metrics-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+        .metric-card { background: rgba(227, 37, 44, 0.05); border: 2px solid #f0f0f0; padding: 16px; border-radius: 12px; text-align: center; transition: all 0.3s ease; }
+        .metric-card:hover { border-color: #E3252C; box-shadow: 0 2px 8px rgba(227, 37, 44, 0.1); }
+        .metric-label { font-size: 11px; color: #666; margin-bottom: 8px; font-weight: 500; text-transform: uppercase; }
+        .metric-value { font-size: 24px; font-weight: 700; color: #E3252C; }
+        .metric-rate { font-size: 20px; font-weight: 700; color: #E3252C; }
+        .metric-change { font-size: 11px; margin-top: 4px; font-weight: 600; }
+        .metric-change.positive { color: #28a745; }
+        .metric-change.negative { color: #dc3545; }
+
+        /* Funnel */
+        .funnel-container { padding: 20px; background: white; border-radius: 12px; border: 2px solid #E3252C; }
+        .funnel-step { background: rgba(227, 37, 44, 0.08); border: 2px solid #E3252C; padding: 14px 20px; margin: 10px auto; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; color: #E3252C; font-weight: 500; }
+        .funnel-step:hover { transform: translateX(5px); box-shadow: 0 4px 12px rgba(227, 37, 44, 0.2); background: rgba(227, 37, 44, 0.12); }
+        .funnel-label { font-weight: 600; color: #333; }
+        .funnel-value { font-size: 16px; font-weight: 600; color: #E3252C; white-space: nowrap; }
+        .funnel-percentage { font-size: 14px; color: #E3252C; margin-left: 10px; opacity: 0.8; }
+
+        /* Content Sections */
+        .content-section { background: #fff; border: 1px solid #E3252C; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .content-section h4 { color: #E3252C; font-size: 16px; margin-bottom: 12px; }
+        .content-section p { color: #666; line-height: 1.8; font-size: 14px; margin-bottom: 12px; text-align: justify; }
+        .content-section ul { font-size: 14px; color: #666; margin-left: 20px; margin-bottom: 12px; }
+        .content-section li { font-size: 14px; color: #666; line-height: 1.8; margin-bottom: 8px; }
+        .content-section ul ul { margin-top: 8px; margin-bottom: 8px; }
+
+        /* Benchmark Table */
+        .benchmark-table { width: 100%; border-collapse: collapse; margin-top: 20px; table-layout: fixed; }
+        .benchmark-table th { background: #E3252C; color: white; padding: 12px; text-align: left; font-size: 14px; font-weight: 600; }
+        .benchmark-table td { padding: 12px; border: 1px solid #e0e0e0; font-size: 14px; color: #666; vertical-align: top; }
+        .benchmark-table tr:nth-child(even) { background: #f8f9fa; }
+        .benchmark-table.funnel-summary { table-layout: fixed; }
+        .benchmark-table.funnel-summary th:nth-child(1), .benchmark-table.funnel-summary td:nth-child(1) { width: 22%; white-space: nowrap; }
+        .benchmark-table.funnel-summary th:nth-child(2), .benchmark-table.funnel-summary td:nth-child(2) { width: 38%; white-space: nowrap; }
+        .benchmark-table.funnel-summary th:nth-child(3), .benchmark-table.funnel-summary td:nth-child(3) { width: 40%; }
+
+        /* ========== ORGANIC GROWTH STYLES ========== */
+        /* Sub-navigation (SEO/ASO toggle) */
+        .sub-nav-tabs { background: #f8f9fa; padding: 8px; border-radius: 8px; display: flex; gap: 8px; margin-bottom: 20px; }
+        .sub-nav-tab { padding: 10px 24px; cursor: pointer; border: none; background: white; color: #666; font-size: 14px; font-weight: 500; border-radius: 6px; transition: all 0.3s ease; border: 2px solid transparent; }
+        .sub-nav-tab:hover { color: #E3252C; border-color: #E3252C; }
+        .sub-nav-tab.active { color: white; background: #E3252C; border-color: #E3252C; }
+
+        /* Country Tabs (within Organic) */
+        .country-tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; padding-bottom: 0; }
+        .country-tab { padding: 10px 20px; cursor: pointer; border: none; background: none; color: #666; font-size: 13px; font-weight: 500; position: relative; transition: all 0.3s ease; white-space: nowrap; }
+        .country-tab:hover { color: #E3252C; background: rgba(227, 37, 44, 0.05); }
+        .country-tab.active { color: #E3252C; background: rgba(227, 37, 44, 0.08); }
+        .country-tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 3px; background: #E3252C; }
+
+        /* ASO Grid */
+        .aso-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .aso-platform-card { background: #f8f9fa; border-radius: 12px; padding: 20px; border: 2px solid #e0e0e0; }
+        .aso-platform-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 16px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .aso-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+        /* QTC (Quarterly Trend Comparison) */
+        .qtc-card { margin-top: 24px; padding: 20px; border: 2px solid #E3252C; border-radius: 12px; background: #fff; }
+        .qtc-card .card-title { color: #E3252C; margin: 0 0 16px 0; font-size: 18px; font-weight: 700; }
+        .qtc-legend { display: flex; gap: 20px; align-items: center; margin-bottom: 16px; }
+        .qtc-legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #374151; }
+        .qtc-swatch { width: 16px; height: 12px; border-radius: 3px; display: inline-block; }
+        .qtc-swatch-q1 { background: rgba(156, 163, 175, 0.5); border: 1px solid #9ca3af; }
+        .qtc-swatch-q2 { background: rgba(227, 37, 44, 0.3); border: 1px solid #E3252C; }
+        .qtc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+        .qtc-chart-card { padding: 12px; border: 1px solid #eef2f7; border-radius: 10px; background: #fff; }
+        .qtc-chart-title { margin: 4px 0 12px; font-weight: 600; font-size: 14px; color: #333; }
+        .qtc-bars { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; height: 140px; padding: 8px 8px 24px; border-left: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; }
+        .qtc-bar { position: relative; align-self: end; width: 100%; border-radius: 6px 6px 0 0; min-height: 4px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; }
+        .qtc-bar.q1 { background: rgba(156, 163, 175, 0.5); border: 1px solid #9ca3af; border-bottom: none; }
+        .qtc-bar.q2 { background: rgba(227, 37, 44, 0.3); border: 1px solid #E3252C; border-bottom: none; }
+        .qtc-val { position: absolute; bottom: 100%; transform: translateY(-4px); font-size: 11px; font-weight: 600; color: #111827; white-space: nowrap; }
+        .qtc-pct { position: absolute; bottom: 100%; transform: translateY(-20px); font-size: 11px; font-weight: 700; white-space: nowrap; }
+        .qtc-pct.positive { color: #16a34a; }
+        .qtc-pct.negative { color: #dc2626; }
+        .qtc-bar-label { position: absolute; bottom: -20px; font-size: 10px; color: #666; }
+
+        /* Key Trends */
+        .key-trends { margin-top: 16px; padding: 16px; background: #f8f9fa; border-radius: 8px; }
+        .key-trends h4 { color: #E3252C; margin-bottom: 12px; font-size: 15px; font-weight: 600; }
+        .key-trends ul { margin: 0; padding-left: 20px; }
+        .key-trends li { margin: 6px 0; font-size: 13px; color: #374151; }
+
+        /* Sub-section and Country Content visibility */
+        .sub-section-content { display: none; }
+        .sub-section-content.active { display: block; }
+        .country-content { display: none; }
+        .country-content.active { display: block; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .aso-grid { grid-template-columns: 1fr; }
+        }
+
+/* === Social Media Q2 Specific Styles (clean) === */
+/* Social Media Q2 Specific Styles */
+.sm-image-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; align-items: start; }
+.sm-gallery-image { border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background: #fff; border: 1px solid #eee; }
+.sm-gallery-image img { width: 100%; height: auto; display: block; object-fit: cover; }
+
+.sm-content-links { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+.sm-content-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: rgba(227, 37, 44, 0.08); border: 1px solid #E3252C; border-radius: 6px; color: #E3252C; text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.3s ease; }
+.sm-content-link:hover { background: #E3252C; color: white; }
+
+.sm-mom-table-container { margin-top: 20px; overflow-x: auto; }
+.sm-mom-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.sm-mom-table th { background: #E3252C; color: white; padding: 12px 8px; text-align: center; font-weight: 600; }
+.sm-mom-table td { padding: 10px 8px; border-bottom: 1px solid #eee; text-align: center; }
+.sm-mom-table tr:hover { background: rgba(227, 37, 44, 0.03); }
+.sm-mom-table .month-header { background: #f8f9fa; font-weight: 600; color: #333; }
+.sm-variance-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.sm-variance-badge.positive { background: rgba(40, 167, 69, 0.15); color: #28a745; }
+.sm-variance-badge.negative { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
+
+.sm-collapsible-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 12px 16px; background: #f8f9fa; border-radius: 8px; margin-bottom: 12px; }
+.sm-collapsible-header h4 { margin: 0; color: #333; font-size: 14px; }
+.sm-collapsible-icon { font-size: 18px; color: #E3252C; transition: transform 0.3s ease; }
+.sm-collapsible-content { display: none; }
+.sm-collapsible-content.open { display: block; }
+
+.sm-qtc-card { background: white; border-radius: 12px; padding: 24px; margin-top: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.sm-qtc-card .card-title { color: #E3252C; }
+.sm-qtc-legend { display: flex; gap: 24px; margin-bottom: 20px; }
+.sm-qtc-legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.sm-qtc-swatch { width: 16px; height: 12px; border-radius: 3px; }
+.sm-qtc-swatch-q1 { background: rgba(156, 163, 175, 0.6); border: 1px solid #9ca3af; }
+.sm-qtc-swatch-q2 { background: rgba(227, 37, 44, 0.3); border: 1px solid #E3252C; }
+.sm-qtc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.sm-qtc-chart { background: #fafafa; border-radius: 8px; padding: 16px; }
+.sm-qtc-insights { margin-top: 20px; padding: 16px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #E3252C; }
+.sm-qtc-insights h5 { color: #E3252C; margin-bottom: 12px; font-size: 14px; }
+.sm-qtc-insights p { font-size: 13px; color: #666; line-height: 1.7; }
+
+@media (max-width: 768px) {
+  
+  .sm-qtc-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<style>
+/* Executive Overview Layout & Styling (scoped) */
+#overview .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#overview .performance-highlights {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 30px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+#overview .highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 20px;
+}
+
+#overview .highlight-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  border: 2px solid #E3252C;
+}
+
+#overview .highlight-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 16px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+#overview .highlight-content {
+  font-size: 14px;
+  color: #666666;
+  line-height: 2;
+  font-weight: 500;
+  font-family: Arial, sans-serif;
+}
+
+/* Executive Summary card */
+#overview .executive-summary {
+  background: #ffffff;
+  border: 2px solid #E3252C;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+#overview .executive-summary h2 {
+  color: #E3252C;
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+}
+
+#overview .executive-summary p {
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  line-height: 1.8;
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+#overview .executive-summary ul {
+  margin-left: 20px;
+  margin-bottom: 15px;
+}
+
+#overview .executive-summary li {
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+/* Bullet list styling for Executive Overview */
+#overview .highlight-content ul.hang-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+}
+
+#overview .highlight-content ul.hang-bullets > li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 12px;
+  text-align: justify;
+  line-height: 1.8;
+}
+
+#overview .highlight-content ul.hang-bullets > li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0.36em;
+  line-height: 1;
+  font-size: 1.05em;
+}
+
+/* Responsive behaviour */
+@media (max-width: 768px) {
+  #overview .highlights-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<style> block or keep in <style> tags) -->
+<style>
+/* Education Section Specific Styles */
+/* Education Performance Table Layout & Emphasis */
+#education .performance-table {
+  background: #ffffff;
+  border: 2px solid #E3252C;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+#education .performance-table table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+#education .performance-table th {
+  background: #E3252C;
+  color: #ffffff;
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#education .performance-table td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+  color: #666666;
+  line-height: 1.7;
+  vertical-align: top;
+}
+
+#education .performance-table tr:last-child td {
+  border-bottom: none;
+}
+
+#education .performance-table th:first-child,
+#education .performance-table td:first-child {
+  width: 20%;
+  white-space: nowrap;
+}
+
+#education .performance-table th:last-child,
+#education .performance-table td:last-child {
+  width: 80%;
+  text-align: justify;
+}
+
+/* Row-level emphasis */
+#education .performance-table .highlight-section {
+  background: #e8f5e9;
+}
+
+#education .performance-table .risk-section {
+  background: #fce4ec;
+}
+
+#education .performance-table .challenge-section,
+#education .performance-table .lowlight-section {
+  background: #fff3e0;
+}
+
+#education .performance-table .recommendation-section {
+  background: #e3f2fd;
+}
+
+#education .performance-table .risk-section { background: #fce4ec; }
+#education .performance-table .challenge-section { background: #fff3e0; }
+#education .performance-table .lowlight-section { background: #fff3e0; }
+
+#education .competitor-card { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+#education .competitor-card h5 { color: #E3252C; font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+#education .competitor-card .markets { font-size: 12px; color: #666; margin-bottom: 8px; font-style: italic; }
+#education .competitor-card .offering { font-size: 13px; color: #333; line-height: 1.6; }
+
+/* Education QTC Styles */
+#education .edu-qtc-card { margin-top: 24px; }
+#education .edu-qtc-card .card-title { color: #E3252C; margin: 0 0 .75rem 0; font-size: 18px; font-weight: 700; }
+#education .edu-qtc-legend { display: flex; gap: 16px; align-items: center; margin: .25rem 0 .75rem; }
+#education .edu-qtc-legend-item { display: flex; align-items: center; gap: 6px; font-size: .85rem; color: #374151; }
+#education .edu-qtc-swatch { width: 14px; height: 10px; border-radius: 3px; border: 1px solid transparent; display: inline-block; }
+#education .edu-qtc-swatch-q1 { background: #9ca3af66; border-color: #9ca3af; }
+#education .edu-qtc-swatch-q2 { background: #93c5fd55; border-color: #60a5fa; }
+#education .edu-qtc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+#education .edu-qtc-chart { background: #fff; border: 1px solid #eef2f7; border-radius: 10px; padding: 14px; margin-bottom: 16px; min-height: 340px; }
+#education .edu-qtc-chart-title { margin: 0 0 .5rem; font-weight: 600; font-size: .95rem; color: #111827; }
+#education .edu-qtc-chart canvas { width: 100%; max-height: 300px; }
+#education .edu-qtc-insights { margin-top: .75rem; border: 1px dashed #e5e7eb; border-radius: 10px; padding: .75rem .9rem; background: #fff; }
+#education .edu-qtc-insights-title { margin: 0 0 .4rem; font-weight: 700; color: #E3252C; }
+#education .edu-qtc-insights-list { margin: .1rem 0 0 1rem; }
+#education .edu-qtc-insights-list li { margin: .15rem 0; }
+#education .edu-qtc-hide { display: none !important; }
+</style>
+
+<body>
+<div class="header">
+<div>
+<h1>Content &amp; Customer Engagement Dashboard</h1>
+<div class="subtitle">Q2 FY26 (September - November 2025) | APAC &amp; ME Division</div>
+</div>
+<div class="logo-container">
+<img alt="APAC &amp; ME Logo" class="logo-img" src="https://raw.githubusercontent.com/peCephas/CCE/main/APAC-ME_Logo-SMALL.jpeg"/>
+</div>
+</div>
+<div class="nav-tabs">
+<button class="nav-tab active" onclick="showSection('overview')">Executive Overview</button>
+<button class="nav-tab" onclick="showSection('crm')">CRM</button>
+<button class="nav-tab" onclick="showSection('organic')">Organic Growth</button>
+<button class="nav-tab" onclick="showSection('social')">Social Media</button>
+<button class="nav-tab" onclick="showSection('education')">Education</button>
+</div>
+<div class="content">
+<!-- Executive Overview Section -->
+<section class="section active" id="overview">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Executive Overview</h2>
+                </div>
+            </div>
+
+            <!-- Highlights and Key Initiatives -->
+            <div class="performance-highlights">
+                <div class="highlights-grid">
+                    <div class="highlight-card">
+                        <div class="highlight-title">Highlights</div>
+                        <div class="highlight-content">
+                            <ul class="hang-bullets">
+                                <li><strong>CRM Operational Maturity:</strong> Successfully completed Beta email testing, implemented Braze governance framework, and delivered Phase 1 SFMC training across markets, enabling independent journey setup and publication.</li>
+                                <li><strong>Organic Growth Momentum:</strong> Delivered 2.05M SEO visits (+15% QoQ), 1,394 applications (+8% QoQ), and 409 first trades (+9% QoQ). Australia's CRO programme achieved 9.32% uplift in application completions with industry-leading 35% win-rate.</li>
+                                <li><strong>ASO Performance:</strong> iOS downloads grew 20% QoQ to 15,858 with conversion rates improving to 1.24% (+0.52pp), validating store listing optimization strategies despite 30% decline in visits.</li>
+                                <li><strong>Social Media Transformation:</strong> Post link clicks surged 131% to 501,522 through conversion-focused strategy. Engagement increased 170% to 756,940, achieving 166% higher engagement rates than competitors despite 95% smaller audiences.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="highlight-card">
+                        <div class="highlight-title">Key Initiatives</div>
+                        <div class="highlight-content">
+                            <ul class="hang-bullets">
+                                <li><strong>IG AU Crypto Rollout:</strong> Copy frameworks completed, wiki documentation under local review, Braze integration setup pending. CRM deliverables timeline being aligned with Product launch schedule.</li>
+                                <li><strong>SG CFD Triggered Communications Migration:</strong> Migration scope and timelines finalised with comprehensive QA protocols, segmentation issue escalation processes, and compliance frameworks established.</li>
+                                <li><strong>Project SWIFT:</strong> Global TechSEO remediation launched targeting 20-50% traffic uplift, addressing 60+ technical implementation issues with external developer support. Currently 30% complete with another 40% in progress. Internal support to complete tickets remains as issue.</li>
+                                <li><strong>AEM Global Access Audit:</strong> Complete overhaul of access entitlements, DAM configuration updates, and training toolkit development delivered.</li>
+                                <li><strong>Braze Migration Readiness:</strong> Phase 1 market sessions scheduled and reviews in progress review SFMC communications and migration mapping, with comprehensive data validation and compliance verification required by mid-December.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Overview Narrative -->
+            <div class="executive-summary">
+                <h2>Executive Summary</h2>
+                <p>Q2 demonstrated strong operational maturity across organic channels while exposing critical CRM performance gaps requiring immediate intervention.</p>
+                <p><strong>CRM Performance Disparity:</strong> Triggered campaigns significantly outperformed manual sends across all markets. Japan Corporate achieved 72.81% open rates and 16.79% CTR, while manual campaigns remained critically low (0.01-0.92% CTR vs 4.9% fintech benchmark). This 5-48x performance gap validates triggered, behaviour-led communications as the primary engagement engine.</p>
+                <p><strong>Regional Performance Dynamics:</strong> Japan led with 1.23M visits (60% of divisional traffic, +23% QoQ) and 173 first trades (-15% QoQ despite traffic growth), highlighting conversion efficiency challenges. UAE delivered exceptional 28% traffic growth to 379K visits with 35% improvement in first trades. Singapore sustained positive momentum with 34% first trade growth. Australia demonstrated conversion efficiency gains (+39% first trades) despite 7% traffic decline.</p>
+                <p><strong>Strategic Weakness – Manual Campaign CTR:</strong> Manual email CTR remains 12-490x below industry benchmarks across all markets, with November showing -26% MOM decline in applications and -29% decline in first trades, signalling potential seasonal vulnerability or market friction requiring Q3 investigation.</p>
+                <p><strong>Competitive Context:</strong> APAC fintech market projected USD 304.6bn by 2030 (16% CAGR). Multi-asset, mobile-first brokers and white-label infrastructure providers increasing competitive pressure. Regional players strengthening through AI-driven compliance tools, localised funding rails, and Shariah-compliant products.</p>
+                <p><strong>Immediate Actions Required:</strong> Launch structured A/B testing on manual campaigns to address stagnant CTR performance, complete Project SWIFT by December to unlock 20-50% traffic uplift, scale Australia's winning CRO components across regions, and implement frequency management to reduce elevated unsubscribe rates in AU EN and Dubai AR segments.</p>
+            </div>
+        </section>
+<!-- CRM Section -->
+<section class="section" id="crm">
+<div class="card">
+<h3 style="font-size: 16px; margin-bottom: 20px; padding: 8px; background: #f8f9fa; border-radius: 4px;">CRM Performance</h3>
+<div class="performance-tabs">
+<button class="performance-tab active" onclick="CRM.showCountry('all')">All Markets</button>
+<button class="performance-tab" onclick="CRM.showCountry('AU')">AU</button>
+<button class="performance-tab" onclick="CRM.showCountry('JP')">JP</button>
+<button class="performance-tab" onclick="CRM.showCountry('SG')">SG</button>
+<button class="performance-tab" onclick="CRM.showCountry('UAE')">UAE</button>
+</div>
+<div class="metrics-grid" id="crmMetricsTop">
+<div class="metric-card">
+<div class="metric-value" id="crm-delivered">9.7M</div>
+<div class="metric-label">Total Delivered</div>
+</div>
+<div class="metric-card">
+<div class="metric-value" id="crm-opens">5.1M</div>
+<div class="metric-label">Total Opens</div>
+</div>
+<div class="metric-card">
+<div class="metric-value" id="crm-clicks">249K</div>
+<div class="metric-label">Unique Clicks</div>
+</div>
+<div class="metric-card">
+<div class="metric-value" id="crm-unsubs">14.1K</div>
+<div class="metric-label">Total Unsubs</div>
+</div>
+<div class="metric-card">
+<div class="metric-value" id="crm-spam">950</div>
+<div class="metric-label">Spam Complaints</div>
+</div>
+</div>
+<div class="metrics-grid" style="margin-top: 12px;">
+<div class="metric-card">
+<div class="metric-rate" id="crm-delivery-rate">99.5%</div>
+<div class="metric-label">Delivery Rate</div>
+</div>
+<div class="metric-card">
+<div class="metric-rate" id="crm-open-rate">52.3%</div>
+<div class="metric-label">Open Rate</div>
+</div>
+<div class="metric-card">
+<div class="metric-rate" id="crm-click-rate">2.6%</div>
+<div class="metric-label">Unique Click Rate</div>
+</div>
+<div class="metric-card">
+<div class="metric-rate" id="crm-unsub-rate">0.1%</div>
+<div class="metric-label">Unsub Rate</div>
+</div>
+<div class="metric-card">
+<div class="metric-rate" id="crm-spam-rate">0.0%</div>
+<div class="metric-label">Spam Complaint Rate</div>
+</div>
+</div>
+<div class="funnel-container" style="margin-top: 30px;">
+<h3 style="font-size: 16px; margin-bottom: 20px; text-align: center;">Engagement Conversion Funnel</h3>
+<div id="crmFunnel"></div>
+</div>
+<div id="crm-content-container"></div>
+</div>
+</section>
+<!-- Organic Growth Section -->
+<section class="section" id="organic">
+<div class="card">
+<div style="background: #f8f9fa; border-left: 4px solid #E3252C; padding: 12px 16px; margin-bottom: 20px; border-radius: 0 8px 8px 0;">
+<p style="margin: 0; color: #333; font-size: 14px; line-height: 1.6;">This section summarises SEO and ASO performance for APAC &amp; ME across FY26 Q1 vs Q2. Use the tabs below to switch between SEO and ASO and to view metrics by market.</p>
+</div>
+<div class="sub-nav-tabs">
+<button class="sub-nav-tab active" onclick="ORGANIC.showSubSection('seo')">SEO Performance</button>
+<button class="sub-nav-tab" onclick="ORGANIC.showSubSection('aso')">ASO Performance</button>
+</div>
+<!-- SEO Sub-section -->
+<div class="sub-section-content active" id="organic-seo">
+<div class="country-tabs">
+<button class="country-tab active" onclick="ORGANIC.showSEOCountry('all')">All Markets</button>
+<button class="country-tab" onclick="ORGANIC.showSEOCountry('AU')">AU</button>
+<button class="country-tab" onclick="ORGANIC.showSEOCountry('JP')">JP</button>
+<button class="country-tab" onclick="ORGANIC.showSEOCountry('SG')">SG</button>
+<button class="country-tab" onclick="ORGANIC.showSEOCountry('UAE')">UAE</button>
+</div>
+<div class="metrics-grid four-col" id="seo-metrics">
+<div class="metric-card">
+<div class="metric-label">Traffic</div>
+<div class="metric-value" id="seo-traffic">2.05M</div>
+<div class="metric-change positive" id="seo-traffic-change">↑ 15% QoQ</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Applications</div>
+<div class="metric-value" id="seo-apps">1,394</div>
+<div class="metric-change positive" id="seo-apps-change">↑ 8% QoQ</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">First Trades</div>
+<div class="metric-value" id="seo-fts">409</div>
+<div class="metric-change positive" id="seo-fts-change">↑ 9% QoQ</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Content Live</div>
+<div class="metric-value" id="seo-content">172</div>
+<div class="metric-change" id="seo-content-change"></div>
+</div>
+</div>
+<!-- SEO Country Content: All Markets -->
+<div class="country-content active" id="seo-content-all">
+<div class="content-section">
+<h4>Overview</h4>
+<p><strong>Performance overview:</strong></p>
+<ul>
+<li>APAC&amp;ME achieved strong Q2 results with 2.05M visits (+15% QoQ), 1,394 applications (+8% QoQ), and 409 first trades (+9% QoQ). Japan led with 1.23M visits (+23% QoQ, 60% of regional traffic), while UAE and Australia showed exceptional growth (+28% and +39% first trades respectively). However, November saw sharp declines: visits -21% MoM, applications -26% MoM, and first trades -29% MoM to 115, signalling potential seasonal weakness requiring Q3 monitoring.</li>
+<li><strong>Content Creation &amp; Optimisation:</strong> Delivered 172 pieces of content across Q2 with 77 pieces in November alone. Additionally, IG.com redesign project delivered updates to 160 high performing pages in Australia, Singapore, and UAE, providing an enhanced user experience and conversion pathways. Localised content partnerships continued to demonstrate improved velocity with gradual traffic and conversion gains.</li>
+<li><strong>CRO Initiative:</strong> Six-month conversion optimisation project in Australia delivered 17 experiments, achieving 6 winning tests that generated a 9.32% uplift in application completions - equivalent to 4,152 additional sign-up completions over the 6-month period. The project concluded with a 35% win-rate, significantly outperforming the industry average of 12%, demonstrating the effectiveness of the strategic testing approach and validation of optimisation hypotheses.</li>
+<li><strong>Project SWIFT:</strong> Launched global Technical SEO remediation project targeting 20-50% traffic uplift, addressing over 60 technical implementation issues with external developer support, currently 30% complete.</li>
+</ul>
+</div>
+<div class="content-section">
+<h4>Highlights</h4>
+<p><strong>APAC&amp;ME Performance Analysis:</strong></p>
+<p>APAC&amp;ME demonstrated strong quarter-over-quarter momentum with 2.05 million total visits (+15% QoQ) and 1,394 applications (+8% QoQ) generating 409 first trades (+9% QoQ). Japan led regional expansion with 1.23 million visits, representing 60% of total organic acquisition and achieving 23% QoQ growth, while maintaining excellent search visibility.</p>
+<p><strong>Quarterly Market Performance Dynamics:</strong></p>
+<p>UAE emerged as the growth standout with exceptional 28% QoQ traffic increases to 379k visits, coupled with a 35% improvement in first trade conversions to 35. Australia demonstrated conversion efficiency gains with first trades surging 39% QoQ to 142 despite a 7% traffic decline, signalling improved funnel performance. Singapore sustained positive conversion momentum with 34% QoQ growth in first trades to 59 and 25% growth in applications to 163, though traffic moderated by 9% to 119k visits.</p>
+<p><strong>Monthly Trend Analysis:</strong></p>
+<p>November showed significant declines with divisional visits down 21% MoM to 639k, applications -26% MoM to 416, and first trades -29% MoM to 115. UAE (-53% to 8 FTs) and Japan (-36% to 42 FTs) experienced severe drops, while Australia demonstrated resilience with only a 14% decline to 49 FTs and Singapore fell 24% to 16 FTs. This broad-based deterioration across all markets suggests potential seasonal softness or market friction requiring close Q3 monitoring.</p>
+<p><strong>Content Strategy Evolution:</strong> Q2 delivered significant platform optimisation with the IG.com reskin project nearing completion across 70 brochure pages and 90 cluster pages in Australia, Singapore, and UAE, enhancing user experience and conversion pathways. The transition to localised freelancer and agency partnerships for semi-evergreen content maintained strong momentum, demonstrating improved content velocity with gradual month-over-month gains in traffic and conversions.</p>
+<p><strong>CRO Initiative:</strong> Completed a six-month conversion optimisation project with focus in addressing Australia's traffic-to-application conversion. Delivered 17 experiments with 6 winning tests achieving 9.32% uplift in applications (4,152 additional applications) and a 35% win-rate vs. 12% industry average. We're now building winning components into AEM for permanent implementation, with plans to scale successful optimisations to other regions via A/B testing.</p>
+<p><strong>Project SWIFT:</strong> Launched a global Technical SEO improvement project targeting 20-50% traffic uplift across all markets. Onboarded two external web developers and an SEO consultant to audit and address over 60 technical implementation issues, with the project currently 30% complete and requiring close coordination between technical SEO, internal development teams, and key stakeholders.</p>
+</div>
+<div class="content-section">
+<h4>Competitor Analysis</h4>
+<p><strong>Ranking Performance:</strong></p>
+<p>Regional search rankings remained stable throughout Q2, despite a temporary drop in September caused by Google's removal of the "#=100" parameter that impacted all major SEO tools' tracking methodologies. Tracking accuracy was restored in November, confirming consistent ranking stability across APAC markets.</p>
+<p>IG maintains dominant competitive positioning with a visibility index score of 67, significantly outperforming the closest competitor Saxo at 17 points - a 50-point gap that shows IG's leadership in organic search performance. Key opportunities lie in new product launches, with Investments now live in Singapore and Crypto planned for Australia, UAE, and Singapore.</p>
+<p>While Google's trust signals for these categories will take time to establish, early Singapore investment content is already gaining traction with improving rankings and conversions. Crypto CFD content is being published proactively ahead of the Crypto launch to build market presence and brand authority.</p>
+</div>
+<div class="content-section">
+<h4>Risks &amp; Recommendations</h4>
+<p><strong>Risks:</strong></p>
+<ul>
+<li>November's performance decline (-29% first trades MoM) signals potential seasonal vulnerability or market friction that requires investigation to prevent Q3 deterioration</li>
+</ul>
+<p><strong>Recommendations:</strong></p>
+<ul>
+<li>Project SWIFT completion by December to unlock critical technical SEO improvements and traffic uplift ahead of Q3</li>
+<li>Implement winning CRO experiment components across AU and across additional markets to replicate Australia's conversion rate uplift</li>
+<li>Develop comprehensive content strategies to support Crypto launch in Australia</li>
+<li>Accelerate topical authority development for Investments in Singapore</li>
+</ul>
+</div>
+<div class="qtc-card" id="seo-qtc-all">
+<h3 class="card-title">Quarterly Trend Comparison</h3>
+<div class="qtc-legend">
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q1"></span> FY26 Q1</div>
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q2"></span> FY26 Q2</div>
+</div>
+<div class="qtc-grid" id="seo-qtc-charts-all"></div>
+<div class="key-trends" id="seo-trends-all"></div>
+</div>
+</div>
+<!-- SEO Country Content: AU -->
+<div class="country-content" id="seo-content-AU">
+<div class="content-section">
+<h4>Overview</h4>
+<p><strong>Traffic Performance:</strong> Australia delivered 323,111 visits in Q2, representing a 7% QoQ decline. Despite the traffic decline, rankings remained solid with improving visibility index score by 1 point to 67. November metrics revealed a 20% traffic decline to 97,485 visits MoM, though non-branded clicks holding steady. The primary driver was reduced search demand for the ASX200 Market Data page, experiencing fewer impressions despite stable rankings. While some semi-evergreen content delivered incremental clicks MoM, this growth was insufficient to offset the Market Data page decline.</p>
+<p><strong>Conversion Performance:</strong> Q2 demonstrated strong conversion dynamics with first trades surging 39% QoQ to 142 and applications growing 4% to 447. October's strong market volatility likely contributed significantly to FT growth. November saw first trades decline 14% MoM to 49 and applications drop 27% MoM to 140, following October's exceptionally strong performance. The strategic CRO program delivered measurable optimization impact with six winning experiments generating a 9.32% uplift in traffic-to-application conversions, improving funnel efficiency. Full site-wide implementation of these winning experiments is expected to drive further growth.</p>
+<p><strong>Content Delivery:</strong> Delivered 59 pieces of content in Australia across Q2 with 32 pieces of content live in November through internal SEO BAU and IG.com project as well as semi-evergreen via freelancer.</p>
+</div>
+<div class="qtc-card" id="seo-qtc-AU">
+<h3 class="card-title">Quarterly Trend Comparison</h3>
+<div class="qtc-legend">
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q1"></span> FY26 Q1</div>
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q2"></span> FY26 Q2</div>
+</div>
+<div class="qtc-grid" id="seo-qtc-charts-AU"></div>
+<div class="key-trends" id="seo-trends-AU"></div>
+</div>
+</div>
+<!-- SEO Country Content: JP -->
+<div class="country-content" id="seo-content-JP">
+<div class="content-section">
+<h4>Overview</h4>
+<p><strong>Traffic Performance:</strong> Japan dominated regional organic performance with 1.23 million visits, representing 60% of divisional traffic and achieving exceptional 23% QoQ growth with visibility index score improving to position 54 (+1). However, this strong performance is heavily relying on news content, which fluctuated dramatically from 139k clicks in October to 78k in November - a 44% decline that drove the 22% overall traffic drop to 384,813 visits in November. While evergreen content demonstrated resilience with stable growth (78k to 80k clicks MoM), the heavy dependence on news content traffic creates vulnerability, requiring diversification.</p>
+<p><strong>Conversion Challenges:</strong> Q2 revealed concerning conversion dynamics with first trades declining 15% QoQ to 173 despite 23% traffic and 8% application growth, indicating funnel inefficiency. November accelerated these concerns with FTs dropping 36% MoM to 42 and applications declining 24% MoM to 107, following a strong October. The disconnect between strong traffic acquisition and weak conversion performance requires investigation into user journey friction points and potential of low-quality traffic.</p>
+<p><strong>Content Delivery &amp; Localisation:</strong> The Japan-based agency partnership continued contributing to the strong traffic growth and stable non-news content performance despite broader conversion challenges. The external agency delivered 16 pieces in Q2 in addition to the semi-evergreen content, creating a stable evergreen content production path for Japan.</p>
+</div>
+<div class="qtc-card" id="seo-qtc-JP">
+<h3 class="card-title">Quarterly Trend Comparison</h3>
+<div class="qtc-legend">
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q1"></span> FY26 Q1</div>
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q2"></span> FY26 Q2</div>
+</div>
+<div class="qtc-grid" id="seo-qtc-charts-JP"></div>
+<div class="key-trends" id="seo-trends-JP"></div>
+</div>
+</div>
+<!-- SEO Country Content: SG -->
+<div class="country-content" id="seo-content-SG">
+<div class="content-section">
+<h4>Overview</h4>
+<p><strong>Traffic Performance:</strong> Singapore experienced a 9% QoQ traffic decline to 118,747 visits, primarily driven by July's currency content spike that generated over 10k clicks alone. November metrics revealed ongoing challenges with visits declining 16% MoM to 36,068, driven by reduced search demand around Gold-related content. Despite substantial impression losses, underlying click-through rate remained solid, with visibility index score at position 73 (-1), demonstrating maintained search visibility.</p>
+<p><strong>Conversion Excellence:</strong> Q2 marked a significant conversion uplift with applications up 25% QoQ to 163 and first trades growing 34% to 59 despite declining traffic volumes. This demonstrates successful funnel optimisation and improved customer quality, with Singapore achieving among the highest conversion rates in the region. However, November revealed vulnerability with applications declining 36% MoM to 45 and FTs dropping 24% to 16, following a strong October and consistent with broader regional seasonal patterns.</p>
+<p><strong>IG Markets Launch:</strong> September marked Singapore's entry into the investment market with the launch of IG Markets. Content development initiatives are focused on building topical authority around investment topics while website enhancements support efficient product cross-sell and increase visibility to capture this new market opportunity.</p>
+</div>
+<div class="qtc-card" id="seo-qtc-SG">
+<h3 class="card-title">Quarterly Trend Comparison</h3>
+<div class="qtc-legend">
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q1"></span> FY26 Q1</div>
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q2"></span> FY26 Q2</div>
+</div>
+<div class="qtc-grid" id="seo-qtc-charts-SG"></div>
+<div class="key-trends" id="seo-trends-SG"></div>
+</div>
+</div>
+<!-- SEO Country Content: UAE -->
+<div class="country-content" id="seo-content-UAE">
+<div class="content-section">
+<h4>Overview</h4>
+<p><strong>Traffic Performance:</strong> UAE delivered exceptional 28% QoQ growth to 379,450 visits, emerging as the regional growth standout with visibility index score improving to position 73 (+1). However, November revealed significant challenges with visits declining 20% MoM to 120,305, driven by reduced commodity search demand. Branded searches around copper and gold experienced decline with clicks falling from 11.5k to 7.8k MoM. Additionally, the gold Market Data page had 70k lower impressions resulting in 1k fewer clicks, reflecting broader market sentiment shifts in commodity trading interest.</p>
+<p><strong>Conversion Dynamics:</strong> Q2 marked a strong conversion improvement with first trades growing 35% QoQ to 35 and applications increasing 6% to 417. However, November exposed significant vulnerability with FTs declining 53% MoM to just 8 and applications dropping 21% MoM to 124, following a strong October and representing the sharpest regional decline in first trade conversions.</p>
+<p><strong>Content Delivery:</strong> Delivered 46 pieces of content in UAE across Q2 with 30 pieces published in November through internal SEO BAU, IG.com reskin project, and semi-evergreen content via freelancer, maintaining strong and consistent content delivery.</p>
+</div>
+<div class="qtc-card" id="seo-qtc-UAE">
+<h3 class="card-title">Quarterly Trend Comparison</h3>
+<div class="qtc-legend">
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q1"></span> FY26 Q1</div>
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q2"></span> FY26 Q2</div>
+</div>
+<div class="qtc-grid" id="seo-qtc-charts-UAE"></div>
+<div class="key-trends" id="seo-trends-UAE"></div>
+</div>
+</div>
+</div>
+<!-- ASO Sub-section -->
+<div class="sub-section-content" id="organic-aso">
+<div class="country-tabs">
+<button class="country-tab active" onclick="ORGANIC.showASOCountry('all')">All Markets</button>
+<button class="country-tab" onclick="ORGANIC.showASOCountry('AU')">AU</button>
+<button class="country-tab" onclick="ORGANIC.showASOCountry('JP')">JP</button>
+<button class="country-tab" onclick="ORGANIC.showASOCountry('SG')">SG</button>
+<button class="country-tab" onclick="ORGANIC.showASOCountry('UAE')">UAE</button>
+</div>
+<div class="aso-grid" id="aso-metrics">
+<div class="aso-platform-card">
+<div class="aso-platform-title">🍎 App Store (iOS)</div>
+<div class="aso-metrics">
+<div class="metric-card">
+<div class="metric-label">Visits</div>
+<div class="metric-value" id="aso-ios-visits">1.30M</div>
+<div class="metric-change negative" id="aso-ios-visits-change">↓ 30% QoQ</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Downloads</div>
+<div class="metric-value" id="aso-ios-downloads">15,858</div>
+<div class="metric-change positive" id="aso-ios-downloads-change">↑ 20% QoQ</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">CVR</div>
+<div class="metric-value" id="aso-ios-cvr">1.24%</div>
+<div class="metric-change positive" id="aso-ios-cvr-change">↑ 0.52pp</div>
+</div>
+</div>
+</div>
+<div class="aso-platform-card">
+<div class="aso-platform-title">🤖 Google Play (Android)</div>
+<div class="aso-metrics">
+<div class="metric-card">
+<div class="metric-label">Visits</div>
+<div class="metric-value" id="aso-android-visits">8,446</div>
+<div class="metric-change negative" id="aso-android-visits-change">↓ 30% QoQ</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Downloads</div>
+<div class="metric-value" id="aso-android-downloads">3,025</div>
+<div class="metric-change negative" id="aso-android-downloads-change">↓ 8% QoQ</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">CVR</div>
+<div class="metric-value" id="aso-android-cvr">35.83%</div>
+<div class="metric-change negative" id="aso-android-cvr-change">↓ 1.52pp</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ASO Country Content: All Markets -->
+<div class="country-content active" id="aso-content-all">
+<div class="content-section">
+<h4>Overview</h4>
+<p><strong>Performance Overview:</strong> Q2 delivered strong iOS results with downloads growing 20% QoQ to 15,858 and conversion rates improving significantly to 1.24% (+0.52pp QoQ), despite a 30% decline in visits to 1.3 million. Android downloads declined 8% QoQ to 3,025 with visits down 30% to 8,446, though maintaining conversion efficiency at 35.83%. November revealed challenges with iOS downloads declining 20% MoM to 4,967 and Android downloads dropping 33% MoM to 787, reflecting potential seasonal softness and global market dynamics.</p>
+<p><strong>iOS Performance:</strong> Downloads grew steadily throughout Q2, validating conversion optimisation strategies. Australia's screenshot refresh in late August drove positive download momentum from September onwards, while conversion rates held strong at 1.24% in November despite seasonal volume declines.</p>
+<p><strong>Android Performance:</strong> Android maintained strong conversion efficiency across markets in Q2 but saw a steep decline in November across the division. Australia's CVR of 45.10% remained highest regionally however November downloads dropping 42% MoM to 241. Japan demonstrated significant CVR improvement to 31.76% (+10.16pp QoQ) with 838 downloads. Singapore and UAE maintained stable conversion rates around 30-35% despite modest download declines.</p>
+<p><strong>Optimisation Initiatives:</strong> Store listing assets enhancements across markets demonstrated measurable impact, with Australia's August screenshot updates and Singapore's October Google Play refresh both targeting improved local market relevance and conversion efficiency.</p>
+</div>
+<div class="content-section">
+<h4>Highlights</h4>
+<p><strong>Performance Overview:</strong> Q2 delivered mixed ASO results with iOS downloads growing 20% to 15,858 despite a 30% decline in visits to 1.3 million, resulting in improved conversion rates of 1.24%. Android experienced a 30% visit decline to 8,446 with downloads decreasing 8% to 3,025, though maintaining strong conversion efficiency at 35.83%.</p>
+<p><strong>iOS Performance Dynamics:</strong> Downloads grew 20% QoQ to 15,858 with gradual MoM increases validating conversion optimisation efforts, despite visits declining 30% to 1.3 million as traffic normalised following July-August's spikes in Singapore and UAE. October showed irregular download peaks in Australia and UAE before returning to normal level in November, where downloads decreased 20% MoM to 4,967 and visits declined 13% to 369,606, though conversion rates remained strong at 1.34%.</p>
+<p><strong>Android Challenges:</strong> Japan saw a spike in August visit due to temporary paid campaign pauses redirecting users to organic channels, elevating Q2 baseline comparisons. November revealed concerning trends with downloads declining sharply across all markets - a 33% MoM drop to 787 aligned with 20-30% global decreases of unknown origin. Australia had the biggest impact with downloads falling 42% MoM to 241, while visits declined 25% to 2,372. Notably, Google's tracking infrastructure showed missing data on November 28th, potentially skewing monthly metrics and requiring December validation.</p>
+<p><strong>Strategic Considerations:</strong> iOS demonstrates strong conversion fundamentals, but the 30% visit decline represents significant opportunity cost - increasing traffic visibility should support further increase in download. Android requires dual focus with relatively flat traffic but declining downloads (-8% QoQ), particularly November's sharp 33% MoM drop aligned with unexplained global decreases. Investigation into Android's download is critical, with December validation needed to separate Google's tracking outage impacts from genuine performance trends.</p>
+</div>
+<div class="content-section">
+<h4>Competitor Analysis</h4>
+<p><strong>iOS Performance:</strong> APAC maintains strong competitive positioning with ASO scores ranging 80-90% on App Tweak's best practice benchmarks, outperforming most tracked competitors. Core optimization fundamentals - keyword-targeted descriptions and screenshot strategies - demonstrate good execution. However, untapped feature opportunities exist to further strengthen market position such as in-app events activation, promotional text utilisation, preview video implementation, and app size optimization.</p>
+<p><strong>Android Performance:</strong> APAC leads competitive field with approximately 90% ASO scores, establishing clear differentiation from regional competitors. Similar to iOS, foundational optimisation elements perform strongly, though in-app events, promotional assets, and technical optimisations enhancement remains.</p>
+<p><strong>Universal Enhancement Opportunity:</strong> App reviews and ratings represent a critical cross-platform improvement area. Enhanced review and proactive rating management could amplify existing ASO strengths and improve conversion rates across both iOS and Android.</p>
+</div>
+<div class="content-section">
+<h4>Risks &amp; Recommendations</h4>
+<p><strong>Key Risks:</strong></p>
+<ul>
+<li>iOS visit decline threatens download growth momentum despite strong conversion improvements, limiting acquisition potential.</li>
+<li>Android's unexplained global download issues in November requires investigation</li>
+<li>Singapore iOS store listing currently displays UK content referencing unavailable products due to Apple's store listing architecture constraints, creating user experience friction and missed opportunities.</li>
+</ul>
+<p><strong>Recommendation:</strong></p>
+<ul>
+<li>Conduct comprehensive Android download efficiency audit to identify root causes of declining performance, comparing APAC trends against global patterns</li>
+</ul>
+</div>
+<div class="qtc-card" id="aso-qtc-all">
+<h3 class="card-title">Quarterly Trend Comparison</h3>
+<div class="qtc-legend">
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q1"></span> FY26 Q1</div>
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q2"></span> FY26 Q2</div>
+</div>
+<div class="qtc-grid" id="aso-qtc-charts-all"></div>
+<div class="key-trends" id="aso-trends-all"></div>
+</div>
+</div>
+<!-- ASO Country Content: AU -->
+<div class="country-content" id="aso-content-AU">
+<div class="content-section">
+<h4>Overview</h4>
+<p><strong>iOS Momentum:</strong> Australia delivered strong Q2 performance with downloads growing 26% to 5,887 and visits increasing 2% to 443,430, driven by improved conversion rates of 1.32% (+0.24pp QoQ). The late-August screenshot refresh validated optimization strategies, generating sustained download momentum through October. November experienced seasonal softness globally with downloads declining 25% MoM to 1,771 and visits down 9% to 141,485.</p>
+<p><strong>Android Deterioration:</strong> Despite modest visit growth (+10% QoQ to 2,299), downloads declined 8% to 1,046 with conversion rates dropping significantly to 45.10% (-9.11pp QoQ). November intensified these challenges with Australia experiencing the sharpest Android decline - downloads plummeting 42% MoM to 241 and visits declining 35% to 584, aligned with global unexplained deterioration patterns and Google's November 28th tracking outage.</p>
+</div>
+<div class="qtc-card" id="aso-qtc-AU">
+<h3 class="card-title">Quarterly Trend Comparison</h3>
+<div class="qtc-legend">
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q1"></span> FY26 Q1</div>
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q2"></span> FY26 Q2</div>
+</div>
+<div class="qtc-grid" id="aso-qtc-charts-AU"></div>
+<div class="key-trends" id="aso-trends-AU"></div>
+</div>
+</div>
+<!-- ASO Country Content: JP -->
+<div class="country-content" id="aso-content-JP">
+<div class="content-section">
+<h4>Overview</h4>
+<p><strong>Balanced iOS Growth:</strong> Japan achieved steady iOS growth with visits growing 18% QoQ to 390,716 and downloads increasing 2% to 5,397, though conversion rates softened slightly to 1.40% (-0.21pp QoQ). November showed synchronised declines with visits dropping 31% MoM to 118,564 and downloads declining 27% to 1,613, consistent with global seasonal patterns.</p>
+<p><strong>Android Normalisation:</strong> Q2 metrics reflected August's inflation from paid campaign pauses, resulting in a 59% QoQ visit decline to 2,649 as traffic normalised. However, conversion rates strengthened significantly to 31.76% (+10.16pp QoQ), suggesting improved user quality. November maintained this efficiency despite 38% visit decline to 656 and 37% download decline to 215, with conversion holding steady at 32.77%.</p>
+</div>
+<div class="qtc-card" id="aso-qtc-JP">
+<h3 class="card-title">Quarterly Trend Comparison</h3>
+<div class="qtc-legend">
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q1"></span> FY26 Q1</div>
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q2"></span> FY26 Q2</div>
+</div>
+<div class="qtc-grid" id="aso-qtc-charts-JP"></div>
+<div class="key-trends" id="aso-trends-JP"></div>
+</div>
+</div>
+<!-- ASO Country Content: SG -->
+<div class="country-content" id="aso-content-SG">
+<div class="content-section">
+<h4>Overview</h4>
+<p><strong>iOS Conversion Excellence:</strong> Singapore demonstrated exceptional conversion optimisation with downloads surging 29% to 3,187 despite visits declining 44% to 364,759. Traffic normalised following June - September's exceptional spikes, while November showed renewed momentum with visits rebounding 43% MoM to 80,344 and downloads growing 13% to 1,197, maintaining strong 1.49% conversion.</p>
+<p><strong>Android Stability:</strong> Google Play performance remained relatively stable with visits declining 8% QoQ to 2,156 and downloads decreasing 8% to 664, maintaining solid 30.85% conversion efficiency. October's store listing localisation - featuring tailored descriptions and screenshots - positioned Singapore for improved Android conversion. November experienced modest declines with downloads dropping 22% MoM to 191 and visits declining 12% to 693, with CVR declining to 27.56% aligned with broader platform trends.</p>
+</div>
+<div class="qtc-card" id="aso-qtc-SG">
+<h3 class="card-title">Quarterly Trend Comparison</h3>
+<div class="qtc-legend">
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q1"></span> FY26 Q1</div>
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q2"></span> FY26 Q2</div>
+</div>
+<div class="qtc-grid" id="aso-qtc-charts-SG"></div>
+<div class="key-trends" id="aso-trends-SG"></div>
+</div>
+</div>
+<!-- ASO Country Content: UAE -->
+<div class="country-content" id="aso-content-UAE">
+<div class="content-section">
+<h4>Overview</h4>
+<p><strong>iOS Transformation:</strong> UAE delivered dramatic conversion improvement with downloads surging 82% to 1,387 despite visits declining 77% to 99,722 as July-August paid campaign spillover effects normalised. November showed synchronised declines with downloads dropping 32% MoM to 386 and visits declining 28% to 29,213.</p>
+<p><strong>Android Resilience:</strong> Google Play maintained relatively steady performance with visits growing 18% QoQ to 1,342 while downloads declined modestly by 1% to 477, though conversion rates declined to 35.61% (-7.09pp QoQ). November demonstrated modest declines with downloads decreasing 20% MoM to 140 and visits holding relatively stable at 439 (-1% MoM), showing some resilience against broader Android platform volatility affecting other markets.</p>
+</div>
+<div class="qtc-card" id="aso-qtc-UAE">
+<h3 class="card-title">Quarterly Trend Comparison</h3>
+<div class="qtc-legend">
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q1"></span> FY26 Q1</div>
+<div class="qtc-legend-item"><span class="qtc-swatch qtc-swatch-q2"></span> FY26 Q2</div>
+</div>
+<div class="qtc-grid" id="aso-qtc-charts-UAE"></div>
+<div class="key-trends" id="aso-trends-UAE"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Media Section -->
+<section class="section" id="social">
+<div class="card">
+<h3 class="card-title" style="font-size: 16px; padding: 8px; background: #f8f9fa; border-radius: 4px;">Social Media Performance</h3>
+<!-- Country Tabs -->
+<div class="performance-tabs" id="social-q2-tabs">
+<button class="performance-tab active" data-country="all">All Markets</button>
+<button class="performance-tab" data-country="AU">AU</button>
+<button class="performance-tab" data-country="JP">JP</button>
+<button class="performance-tab" data-country="SG">SG</button>
+<button class="performance-tab" data-country="UAE">UAE</button>
+</div>
+<!-- Metrics Grid -->
+<div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr);">
+<div class="metric-card">
+<div class="metric-label">Audience</div>
+<div class="metric-value" id="sm-q2-audience">201K</div>
+<div class="metric-variance positive" id="sm-q2-audience-var">↑ 5.4% vs Q1</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Engagements</div>
+<div class="metric-value" id="sm-q2-engagements">757K</div>
+<div class="metric-variance positive" id="sm-q2-engagements-var">↑ 170% vs Q1</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Engagement Rate</div>
+<div class="metric-value" id="sm-q2-rate">0.4%</div>
+<div class="metric-variance positive" id="sm-q2-rate-var">↑ 9.1% vs Q1</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Post Link Clicks</div>
+<div class="metric-value" id="sm-q2-clicks">502K</div>
+<div class="metric-variance positive" id="sm-q2-clicks-var">↑ 130.9% vs Q1</div>
+</div>
+</div>
+<!-- Overview Section -->
+<div class="content-section" id="sm-q2-overview-section">
+<h4>Overview</h4>
+<p id="sm-q2-overview"></p>
+<p id="sm-q2-overview-2" style="display:none;"></p>
+<ul id="sm-q2-overview-list" style="display:none;"></ul>
+<p id="sm-q2-overview-3" style="display:none;"></p>
+</div>
+<!-- Audience Growth & Engagement Metrics -->
+<div class="content-section" id="sm-q2-metrics-section" style="display:none;">
+<h4>Audience Growth &amp; Engagement Metrics</h4>
+<ul id="sm-q2-metrics-list"></ul>
+</div>
+<!-- Content Performance & Insights -->
+<div class="content-section" id="sm-q2-content-section">
+<h4 id="sm-q2-content-title">Content Performance &amp; Insights</h4>
+<div id="sm-q2-content-body"></div>
+<!-- Image Gallery (3 columns) -->
+<div class="sm-image-gallery" id="sm-q2-image-gallery" style="display:none;">
+<div class="sm-gallery-image">
+<img alt="Singapore - How US rate cuts affect your wallet" src="https://pecephas.github.io/CCE/social-q2-singapore.png"/>
+</div>
+<div class="sm-gallery-image">
+<img alt="UAE - Cotton: The $1.1 trillion commodity" src="https://pecephas.github.io/CCE/social-q2-uae.png"/>
+</div>
+<div class="sm-gallery-image">
+<img alt="Australia - New York Fashion Week" src="https://pecephas.github.io/CCE/social-q2-australia.png"/>
+</div>
+</div>
+<!-- Content Links -->
+<h5 id="sm-q2-links-title" style="color: #333; font-size: 14px; margin: 20px 0 12px; display:none;">Q2 Content Decks:</h5>
+<div class="sm-content-links" id="sm-q2-content-links" style="display:none;"></div>
+</div>
+<!-- Competitor Analysis -->
+<div class="content-section" id="sm-q2-competitor-section" style="display:none;">
+<h4>Competitor Analysis &amp; Positioning</h4>
+<div id="sm-q2-competitor-body"></div>
+</div>
+<!-- Risks, Challenges & Recommendations -->
+<div class="content-section" id="sm-q2-risks-section" style="display:none;">
+<h4>Risks, Challenges &amp; Recommendations</h4>
+<div id="sm-q2-risks-body"></div>
+</div>
+<!-- Monthly Trend Chart -->
+<div class="chart-container" id="sm-q2-trend-chart-container">
+<div class="chart-title" style="font-size: 16px; font-weight: 600; color: #E3252C; margin-bottom: 16px;">📈 Monthly Performance Trend (Sep - Nov 2025)</div>
+<div class="chart-wrapper" style="height: 300px; position: relative;">
+<canvas id="smQ2MonthlyTrendChart"></canvas>
+</div>
+</div>
+<!-- MoM Comparison Table (Collapsible) -->
+<div class="sm-collapsible-header" id="sm-q2-mom-header">
+<h4>📋 Detailed Month-over-Month Comparison</h4>
+<span class="sm-collapsible-icon" id="sm-q2-mom-icon">▼</span>
+</div>
+<div class="sm-collapsible-content" id="sm-q2-mom-table-content">
+<div class="sm-mom-table-container">
+<table class="sm-mom-table">
+<thead>
+<tr>
+<th>Month</th>
+<th>Audience</th>
+<th>Engagements</th>
+<th>Engagement Rate</th>
+<th>Post Link Clicks</th>
+</tr>
+</thead>
+<tbody id="sm-q2-mom-tbody"></tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Quarterly Trend Comparison -->
+<div class="sm-qtc-card" id="sm-q2-qtc-card" style="display:none;">
+<h3 class="card-title">Quarterly Trend Comparison</h3>
+<div class="sm-qtc-legend">
+<div class="sm-qtc-legend-item"><span class="sm-qtc-swatch sm-qtc-swatch-q1"></span> FY26 Q1</div>
+<div class="sm-qtc-legend-item"><span class="sm-qtc-swatch sm-qtc-swatch-q2"></span> FY26 Q2</div>
+</div>
+<div class="sm-qtc-grid">
+<div class="sm-qtc-chart">
+<div class="chart-title" style="font-size: 16px; font-weight: 600; color: #E3252C; margin-bottom: 16px;">Quarterly Performance Comparison</div>
+<div class="chart-wrapper" style="height: 300px;"><canvas id="smQ2QtcBarChart"></canvas></div>
+</div>
+<div class="sm-qtc-chart">
+<div class="chart-title" style="font-size: 16px; font-weight: 600; color: #E3252C; margin-bottom: 16px;">Metric Distribution</div>
+<div class="chart-wrapper" style="height: 300px;"><canvas id="smQ2QtcDoughnut"></canvas></div>
+</div>
+</div>
+<div class="sm-qtc-chart" style="margin-top: 20px;">
+<div class="chart-title" style="font-size: 16px; font-weight: 600; color: #E3252C; margin-bottom: 16px;">Performance Radar</div>
+<div class="chart-wrapper" style="height: 300px;"><canvas id="smQ2QtcRadar"></canvas></div>
+</div>
+<div class="sm-qtc-insights">
+<h5>Key Insights</h5>
+<p>Q2's strategic pivot from balanced metrics (Q1) to conversion focus (Q2) delivered results. Link clicks now represent 40% of strategic focus (up from 25%), while audience growth decreased to 15% (from 30%). This deliberate trade-off – reach for relevance – validates our efficiency-first approach.</p>
+<p style="margin-top: 12px;">October's peak proves our potential when all elements align. November's universal decline reveals the gap between campaign excellence and sustainable engagement. The solution isn't more campaigns but better content architecture between them.</p>
+</div>
+</div>
+</section>
+<!-- Education Section -->
+<section class="section" id="education">
+    <div class="card">
+        <div style="margin-top: 24px;">
+            <h3 style="font-size: 16px; margin-bottom: 16px; padding: 8px; background: #f8f9fa; border-radius: 4px; font-family: Arial, sans-serif;">Education Performance</h3>
+            
+            <!-- Country Tabs -->
+            <div class="performance-tabs">
+                <button class="performance-tab active" onclick="EDUCATION.showCountry('all')">All Markets</button>
+                <button class="performance-tab" onclick="EDUCATION.showCountry('AU')">AU</button>
+                <button class="performance-tab" onclick="EDUCATION.showCountry('JP')">JP</button>
+                <button class="performance-tab" onclick="EDUCATION.showCountry('SG')">SG</button>
+                <button class="performance-tab" onclick="EDUCATION.showCountry('UAE')">UAE</button>
+            </div>
+
+            <!-- Metrics Grid - First Row -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px;">
+                <div class="metric-card"><div class="metric-label">Total Users</div><div class="metric-value" id="edu-total-users">19.8K</div></div>
+                <div class="metric-card"><div class="metric-label">Prospect Users</div><div class="metric-value" id="edu-prospect-users">15.4K</div></div>
+                <div class="metric-card"><div class="metric-label">Sessions</div><div class="metric-value" id="edu-sessions">32.1K</div></div>
+                <div class="metric-card"><div class="metric-label">Demo Signups</div><div class="metric-value" id="edu-demo-signups">77</div></div>
+            </div>
+
+            <!-- Metrics Grid - Second Row -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px;">
+                <div class="metric-card"><div class="metric-label">Applications</div><div class="metric-value" id="edu-applications">38</div></div>
+                <div class="metric-card"><div class="metric-label">First Trades</div><div class="metric-value" id="edu-first-trades">450</div></div>
+                <div class="metric-card"><div class="metric-label">FT CVR</div><div class="metric-value" id="edu-ft-cvr">2.27%</div></div>
+                <div class="metric-card"><div class="metric-label">Demo Users</div><div class="metric-value" id="edu-demo-users">10.8K</div></div>
+            </div>
+
+            <!-- Metrics Grid - Third Row -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px;">
+                <div class="metric-card"><div class="metric-label">Demo to Application</div><div class="metric-value" id="edu-demo-to-app">32</div></div>
+                <div class="metric-card"><div class="metric-label">Demo to First Trade</div><div class="metric-value" id="edu-demo-to-ft">131</div></div>
+                <div class="metric-card"><div class="metric-label">Demo to FT CV%</div><div class="metric-value" id="edu-demo-ft-cvr">24.52%</div></div>
+            </div>
+
+            <!-- Overview -->
+            <div class="content-section" style="margin-top: 30px;">
+                <h4>Overview</h4>
+                <div id="edu-overview"></div>
+            </div>
+
+            <!-- Performance Table -->
+            <div class="performance-table" id="edu-performance-table"></div>
+
+            <!-- Competitor Overview -->
+            <div class="content-section" style="margin-top: 30px;" id="edu-competitor-section">
+                <h4>Competitor Overview</h4>
+                <p style="margin-bottom: 16px;">Summary of lead competitors and their educational offering:</p>
+                
+                <div class="competitor-card">
+                    <h5>CMC Markets</h5>
+                    <div class="markets">Markets: Australia and Singapore</div>
+                    <div class="offering"><strong>Education offering:</strong> 'Knowledge hub', SEO articles, Platform guides, News and market insights, Webinars (SG), eBook (SG), Podcasts (SG), FAQs</div>
+                </div>
+                
+                <div class="competitor-card">
+                    <h5>Plus 500</h5>
+                    <div class="markets">Markets: All</div>
+                    <div class="offering"><strong>Education offering:</strong> Trading Academy (no courses), Webinars, Extensive video and article material, eBook, Glossary, News and market insights, Economic calendar, Alerts, Risk management tools, Demo, Localised material, FAQs</div>
+                </div>
+                
+                <div class="competitor-card">
+                    <h5>Avatrade</h5>
+                    <div class="markets">Markets: Australia, UAE</div>
+                    <div class="offering"><strong>Education offering:</strong> Education is listed in main navigation everywhere but Australia. No courses, extensive video and article material, eBook, Glossary, Blog, Demo, Localised material, FAQs</div>
+                </div>
+                
+                <div class="competitor-card">
+                    <h5>eToro</h5>
+                    <div class="markets">Markets: Australia, Singapore, UAE</div>
+                    <div class="offering"><strong>Education offering:</strong> eToro Academy, Courses, Extensive video and article material, Webinars, Podcasts, News and market insights, Quarterly surveys, Guides, Tutorials, Economic calendar, Semi-localised material, Demo, FAQs</div>
+                </div>
+                
+                <div class="competitor-card">
+                    <h5>IBKR</h5>
+                    <div class="markets">Markets: Australia, Singapore, UAE</div>
+                    <div class="offering"><strong>Education offering:</strong> IBKR Campus, Webinars, Extensive video and article material, eBook, Glossary, News and market insights, Economic calendar, Demo, No localisation within the region, FAQs</div>
+                </div>
+                
+                <div class="competitor-card">
+                    <h5>GMO Click</h5>
+                    <div class="markets">Markets: Japan</div>
+                    <div class="offering"><strong>Education offering:</strong> SEO articles, Demo, Economic calendar, FAQs</div>
+                </div>
+            </div>
+
+            <!-- Quarterly Trend Comparison -->
+            <section class="card edu-qtc-card" id="edu-qtc-section">
+                <h3 class="card-title">Quarterly Trend Comparison</h3>
+                <div class="edu-qtc-legend">
+                    <div class="edu-qtc-legend-item"><span class="edu-qtc-swatch edu-qtc-swatch-q1"></span><span>FY26 Q1</span></div>
+                    <div class="edu-qtc-legend-item"><span class="edu-qtc-swatch edu-qtc-swatch-q2"></span><span>FY26 Q2</span></div>
+                </div>
+                
+                <div class="edu-qtc-grid">
+                    <div class="edu-qtc-chart">
+                        <h4 class="edu-qtc-chart-title">User Metrics Comparison</h4>
+                        <canvas id="eduQtcUser"></canvas>
+                    </div>
+                    <div class="edu-qtc-chart">
+                        <h4 class="edu-qtc-chart-title">Conversion Funnel Performance</h4>
+                        <canvas id="eduQtcFunnel"></canvas>
+                    </div>
+                </div>
+                
+                <div class="edu-qtc-chart">
+                    <h4 class="edu-qtc-chart-title">Quarter-over-Quarter Performance Change</h4>
+                    <canvas id="eduQtcChange"></canvas>
+                </div>
+                
+                <div class="edu-qtc-insights">
+                    <h4 class="edu-qtc-insights-title">Key Insights & Actionable Recommendations</h4>
+                    <ul class="edu-qtc-insights-list">
+                        <li><strong>First trades grew 11.1%</strong> despite demo signup collapse - converting existing pipeline effectively</li>
+                        <li><strong>Critical mid-funnel breakdown:</strong> Demo signups down 41.2%, applications down 51.3% - urgent investigation needed</li>
+                        <li><strong>Traffic growth healthy:</strong> Users up 5.9%, sessions up 11.2% - audience expansion continues</li>
+                        <li><strong>Demo experience works:</strong> 24.52% demo-to-FT CVR proves conversion effectiveness when users reach demo</li>
+                        <li><strong>Content-to-conversion gap:</strong> High-traffic technical content (0.05% CVR) vs practical content (10-18% CVR) requires bridging</li>
+                        <li><strong>Action required:</strong> Audit demo/application flows, add CTAs to high-traffic pages, create theory-to-practice pathways</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+</div>
+<script>
+    // ========== MAIN NAVIGATION ==========
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+        document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+        var section = document.getElementById(sectionId);
+        if (section) { section.classList.add('active'); }
+        if (event && event.target) { event.target.classList.add('active'); }
+        
+        if (sectionId === 'crm') {
+            setTimeout(function() { CRM.init(); }, 100);
+        } else if (sectionId === 'organic') {
+            setTimeout(function() { ORGANIC.init(); }, 100);
+        }
+    }
+
+    // ========== CRM MODULE (IIFE) ==========
+    var CRM = (function() {
+        var data = {
+            all: { sent: 9715323, delivered: 9666195, opens: 5051120, clicks: 248931, unsubs: 14088, spam: 950, deliveryRate: 99.5, openRate: 52.3, clickRate: 2.6, unsubRate: 0.1, spamRate: 0.0, displayDelivered: '9.7M', displayOpens: '5.1M', displayClicks: '249K', displayUnsubs: '14.1K', displaySpam: '950' },
+            AU: { sent: 3749029, delivered: 3735720, opens: 2021971, clicks: 95886, unsubs: 7582, spam: 437, deliveryRate: 99.64, openRate: 54.14, clickRate: 2.56, unsubRate: 0.20, spamRate: 0.01, displayDelivered: '3.7M', displayOpens: '2.0M', displayClicks: '95.9K', displayUnsubs: '7.6K', displaySpam: '437' },
+            JP: { sent: 4466038, delivered: 4449040, opens: 2175737, clicks: 103820, unsubs: 2164, spam: 66, deliveryRate: 99.62, openRate: 48.70, clickRate: 2.32, unsubRate: 0.05, spamRate: 0.00, displayDelivered: '4.4M', displayOpens: '2.2M', displayClicks: '103.8K', displayUnsubs: '2.2K', displaySpam: '66' },
+            SG: { sent: 1048827, delivered: 1034480, opens: 604730, clicks: 30310, unsubs: 2871, spam: 342, deliveryRate: 98.64, openRate: 57.72, clickRate: 2.89, unsubRate: 0.27, spamRate: 0.03, displayDelivered: '1.0M', displayOpens: '604.7K', displayClicks: '30.3K', displayUnsubs: '2.9K', displaySpam: '342' },
+            UAE: { sent: 451429, delivered: 446955, opens: 248682, clicks: 18915, unsubs: 1471, spam: 105, deliveryRate: 98.99, openRate: 55.61, clickRate: 4.22, unsubRate: 0.33, spamRate: 0.02, displayDelivered: '447.0K', displayOpens: '248.7K', displayClicks: '18.9K', displayUnsubs: '1.5K', displaySpam: '105' }
+        };
+
+        var content = {
+            all: '<div class="content-section" style="margin-top: 30px;"><h4>Overview</h4><p>Across APAC & ME, CRM delivery performance remained very strong this quarter, with average delivery rates holding <strong>above 98%</strong> for both manual and triggered sends, broadly in line with last quarter. Triggered campaigns again accounted for the majority of total sends and continued to outperform manual campaigns on engagement.</p><p>Versus last quarter, <strong>triggered engagement improved</strong> notably in Japan, Singapore and UAE, where CTRs rose from low single digits (and in some cases below 1%) to materially higher levels, confirming the value of behaviour-led, high-relevance content. Manual campaigns showed only modest CTR improvements in Singapore, Japan and UAE and remained critically low in Australia EN, where click behaviour has not kept pace with stable open rates. Australia EN and Dubai (especially Arabic) continued to deliver solid open rates but also showed <strong>elevated unsubscribe rates, indicating content fatigue and/or frequency pressure</strong> in key segments.</p><p>Overall, this quarter reinforces the same structural pattern as last quarter: triggered journeys are the primary engine of engagement, and <strong>manual-heavy segments will require targeted optimisation to close the gap.</strong></p></div><div class="content-section"><h4>Highlights</h4><ul><li>Simplified CFD <strong>CRM readiness progressing well</strong>, with all triggered essential communications defined with wiki documentation.</li><li><strong>AU Crypto essential comms testing ongoing</strong>, ensuring readiness for future rollout.</li><li><strong>Braze training completed for AU local marketing</strong>, supporting operational readiness for Braze adoption.</li></ul></div><div class="content-section"><h4>Projects in Play</h4><ul><li><strong>New Journeys:</strong> AU Crypto and SG CFD journeys are being designed end-to-end with clearer stages, data triggers and orchestration, enabling measurable uplift in activation, funding and first-trade conversion.</li><li><strong>New template design</strong> and testing for IG Markets and IG Trading in progress.</li><li><strong>Existing Journey Optimisation:</strong> Current SFMC journeys across markets are being audited with the intention to simplify and A/B test to improve engagement, reduce friction and increase trading and retention.</li><li><strong>SFMC Migration Prep:</strong> The SFMC estate (data extensions, automations, templates, triggers and +100 emails) to be documented and lifecycle-mapped, providing a clear roadmap for migration.</li><li><strong>Systematic Testing Roadmap:</strong> A 6–12 month test plan is being designed.</li></ul></div><div class="content-section"><h4>Competitor Analysis</h4><p><strong><u>APAC FinTech Snapshot</u></strong></p><ul><li>USD 144.9bn market in 2025, projected to ~USD 304.6bn by 2030 (CAGR ~16%).</li><li><strong>Growth powered by:</strong><ul><li>High mobile penetration</li><li>Rising middle class and digitally native investors</li><li>Rapid adoption of digital banking, wealthtech and cross-border investing</li></ul></li><li><strong>Fast emergence of:</strong><ul><li>AI-enabled finance</li><li>Tokenised assets</li><li>Robo-advice and algorithmic trading infrastructure</li></ul></li></ul><p><strong>Implication for IG (APAC)</strong></p><ul><li>Multi-asset, mobile-first, global-access platforms are setting the bar.</li><li>Legacy brokers are under pressure to modernise UX, expand asset coverage and deliver personalised lifecycle journeys.</li></ul><p style="margin-top: 20px;"><strong><u>Competitive Landscape – Key Movers & Trends (Sep - Nov 2025)</u></strong></p><table class="benchmark-table"><thead><tr><th>Trend</th><th>What We\'re Seeing</th><th>Implication for IG</th></tr></thead><tbody><tr><td>Multi-asset, retail-first brokers gaining share (APAC)</td><td>Global stocks, ETFs, fractional shares, multi-currency wallets and ultra-fast onboarding becoming standard. Mobile-first UX and AI-driven insights common among challengers.</td><td>Stronger fight for digitally native retail clients; IG must match or exceed multi-asset access, UX quality and insight tools.</td></tr><tr><td>White-label & infra providers lowering entry barriers</td><td>Plug-and-play trading infrastructure allows small brokers to launch quickly with competitive tools. RegTech simplifies compliance setup.</td><td>IG is competing not just with known brands but a long tail of new brokers powered by shared infrastructure. Differentiation must go beyond basic platform capabilities.</td></tr><tr><td>ME-focused brokers expanding multi-asset & crypto</td><td>Regional players adding digital assets, local funding rails, Shariah-compliant products and Arabic-first UX. Strong local brands emerging under new regulations.</td><td>Localisation quality (language, funding options, cultural fit) is as important as product breadth in ME. IG must feel "locally built", not just "global".</td></tr><tr><td>RegTech as a competitive differentiator</td><td>AML, governance and onboarding oversight now central to ME broker operations. AI-driven compliance tools increasingly adopted.</td><td>Compliance maturity becomes a front-of-house value proposition. IG can lean into "safest, most transparent, most compliant" positioning across ME and regulated APAC.</td></tr></tbody></table><p style="margin-top: 20px;"><strong><u>Risks to IG - APAC and ME</u></strong></p><table class="benchmark-table"><thead><tr><th>Risk Area</th><th>Why it Matters</th></tr></thead><tbody><tr><td>Market fragmentation</td><td>White-label brokers increase the number of competitors IG must beat on UX, pricing and speed.</td></tr><tr><td>Pricing pressure</td><td>Low-fee, multi-asset brokers are conditioning APAC and ME clients to expect tight spreads and near-zero fees.</td></tr><tr><td>Regulatory overhead (ME)</td><td>New UAE rules increase compliance cost, onboarding complexity and operational requirements.</td></tr><tr><td>Shifting client expectations</td><td>Clients increasingly want multi-asset, mobile-first, content-led, personalised journeys.</td></tr><tr><td>Crypto/digital-asset readiness</td><td>APAC and ME clients show strong demand; IG risks falling behind without a roadmap.</td></tr><tr><td>Threat of disintermediation</td><td>Infrastructure-powered brokers may bypass traditional models with leaner cost structures.</td></tr></tbody></table></div><div class="content-section"><h4>Risks & Recommendations</h4><p><strong><u>CRM Risks</u></strong></p><ul><li><strong>Client churn risk</strong> in APAC as fintech-native brokers offer more personalised, mobile-first experiences.</li><li><strong>ME onboarding friction</strong> likely to increase due to regulatory tightening.</li><li><strong>Potential for drop-offs</strong> in funding journeys where local funding rails are not optimised.</li><li><strong>Content irrelevance risk</strong> if CRM messaging does not match fast-evolving retail themes (AI, global access, digital assets).</li></ul><p><strong><u>CRM Recommendations</u></strong></p><ul><li><strong>Add risk-based micro-journeys</strong> using behavioural and regulatory signals</li><li><strong>Expand educational CRM flows</strong> tied to:<ul><li>mobile first approach</li><li>global market access</li><li>AI tools</li><li>safe trading / risk controls</li></ul></li><li><strong>Use CRM to strengthen trust</strong> with specific compliance messaging.</li><li><strong>Create competitive-switcher journeys</strong> targeting clients who use Tiger, Futu, Exness or local UAE/KSA apps.</li><li><strong>Introduce cross-sell journeys</strong> for non-leveraged investing.</li></ul></div>',
+            AU: '<div class="content-section" style="margin-top: 30px;"><h4>Highlights</h4><ul><li>AU Simplified Chinese triggered sends continue to excel, <strong>improving quarter-on-quarter</strong> from <strong>6%+ CTR and 65%+ opens</strong> last quarter to 16.47% CTR and 58.93% opens this quarter, showing consistently strong content-to-audience relevance.</li><li>Triggered sends again outperform manual sends, maintaining 99%+ delivery and increasing QoQ in CTR (from ~2-3% last quarter to 2.79-16.47% this quarter depending on language).</li><li>AU English manual sends maintained stable open rates (46-53% both quarters), confirming that subject line strategy remains effective despite stronger competition in APAC.</li><li>AU Welcome Journey <strong>performance remained robust</strong>, with leverage and dual-client paths delivering high traded conversions and income, consistent with last quarter\'s pattern where education-led flows converted best.</li><li>Client Income Per Conversion <strong>(CIPC) increased</strong> in key leverage segments, indicating stronger revenue efficiency compared with last quarter.</li></ul></div><div class="content-section"><h4>Areas for Improvement</h4><ul><li>Manual English CTR remains critically low at 0.87%, largely <strong>unchanged from last quarter</strong> (0.01-0.17% previously), showing little improvement QoQ in click behaviour despite stable open rates.</li><li>AU Traditional Chinese CTR remains below 1%, similar to last quarter, meaning this segment is not benefiting from the uplift seen in Simplified Chinese audiences.</li><li><strong>Unsubscribes in AU EN manual sends remain elevated</strong> (0.08-0.24% this quarter, compared with 0.24-0.31% last quarter), showing a slight QoQ improvement but still indicating content saturation.</li><li>Several Welcome Journey control groups outperformed treatment groups in isolated nodes (e.g., Non-Leverage Single, some Dual paths), a similar pattern seen last quarter, <strong>highlighting a need for content refresh</strong> and stronger personalisation.</li><li>Competitors in APAC have continued to increase investment in personalised education, mobile-first content and global-access messaging, raising the bar for CRM effectiveness and influencing client expectations.</li></ul></div><div class="content-section"><h4>Next Steps</h4><p><strong><u>Short-term (0-3 months)</u></strong></p><ul><li>Apply Simplified Chinese success patterns to AU EN by using clearer CTAs, shorter mobile-first modules and more benefit-led positioning. This is supported by QoQ evidence that Simplified Chinese performance remained the most resilient.</li><li><strong>Launch structured A/B testing</strong> on manual sends to address the CTR stagnation observed across both quarters. Test variables include CTA phrasing, button placement, topical themes and more visual content.</li><li><strong>Prioritise segmentation and frequency management</strong> in AU EN to reduce unsubscribes, given observed QoQ improvement but continued sensitivity to volume.</li><li>Refresh AU Traditional Chinese messaging with culturally aligned language, clearer examples and simplified format based on QoQ static results.</li></ul><p><strong><u>Mid-term (3-6 months)</u></strong></p><ul><li>Build new micro-education modules for leverage and dual clients, matching high CIPC and consistent conversion patterns seen in both quarter periods.</li><li>Introduce retention-focused journeys for newly activated clients, reinforcing behavioural nudges that performed strongly in both versions of the Welcome Journey.</li></ul></div><div class="content-section"><h4>Australia Funnel Stage Summary</h4><table class="benchmark-table funnel-summary"><thead><tr><th>Funnel Stage</th><th>Key Stats</th><th>Insight</th></tr></thead><tbody><tr><td>Application → First Fund</td><td>- Same Day: 11.18%<br>- 1–7 Days: ~8.4%<br>- 8–30 Days: ~4.1%<br>- 31+ Days: 1.15%<br>- <strong>No Fund: 75.17%</strong></td><td>Around 1 in 4 Australian applicants eventually fund, with the majority of funding happening in the first week after application. If they have not funded by 30 days, the probability drops sharply. Early post-application nudges are critical.</td></tr><tr><td>Application → First Trade</td><td>- Same Day: 3.46%<br>- 1–7 Days: ~8.5%<br>- 8–30 Days: ~4.9%<br>- 31+ Days: 1.41%<br>- <strong>No Trade: 81.70%</strong></td><td>Only ~18% of AU applicants progress to a first trade. Most trades occur within 7 days of application, reinforcing the need for strong, fast "first trade" education and support.</td></tr><tr><td>Activation → First Fund</td><td>- Same Day: 12.37%<br>- 1–7 Days: ~8.3%<br>- 8–30 Days: ~3.3%<br>- 31+ Days: 0.90%<br>- <strong>No Fund: 75.18%</strong></td><td>Even once AU clients activate, three-quarters never fund. There is a strong same-day funding spike, plus a shorter tail in the first week, meaning activation messages should heavily prioritise immediate funding.</td></tr><tr><td>Activation → First Trade</td><td>- Same Day: 3.89%<br>- 1–7 Days: ~9.0%<br>- 8–30 Days: ~4.2%<br>- 31+ Days: 1.20%<br>- <strong>No Trade: 81.70%</strong></td><td>Less than 1 in 5 activated AU clients go on to trade. Where trading does happen, it is again concentrated in the first week, indicating a clear need for post-activation trading guidance and reassurance.</td></tr><tr><td>First Fund → First Trade</td><td>- Same Day: 8.01%<br>- 1–7 Days: ~8.2%<br>- 8–30 Days: ~1.8%<br>- 31+ Days: 0.30%<br>- <strong>No Trade: 81.77%</strong></td><td>Even after funding, only ~18% of AU clients trade. This is the largest leakage point in the Australian funnel - funded clients not trading represents a major missed revenue opportunity and should be a top CRM focus.</td></tr></tbody></table></div><div class="content-section"><h4>Overall AU Funnel Insights (Quarter)</h4><p><strong>1. Early Conversion is the Key Window</strong></p><p>Across all stages - Application → Fund, Application → Trade, Activation → Fund, and Activation → Trade - the majority of meaningful action happens within the first 7 days.</p><ul><li><strong>Funding:</strong> ~19% of all funding occurs within Day 0 - 7</li><li><strong>Trading:</strong> ~17.5% of trades occur within the first week</li></ul><p>This confirms that the first-week window is the highest opportunity period for targeted CRM nudges, education, and conversion support.</p><p><strong>2. High Drop-Off at Funding Stage</strong></p><p>The most significant leakage in the Australian funnel is failure to fund:</p><ul><li>75% of applicants never fund</li><li>75% of activated clients still never fund</li></ul><p>This shows that while clients are comfortable activating their account, many do not take the next financial step.</p><p><strong>Key implications:</strong></p><ul><li>stronger value-proposition messages</li><li>clearer funding guidance</li><li>reassurance messaging around safety, security, and funding options</li></ul><p><strong>3. Trading Activation is Low Across the Funnel</strong></p><p>Even after clients fund, most do not take the final step and place a trade:</p><ul><li>Only ~18% of funded clients trade (First Fund → First Trade)</li><li>Trading drop-off is the largest revenue-impacting gap in the AU funnel</li></ul><p>This suggests a need for:</p><ul><li>product walkthroughs</li><li>strategy guidance</li><li>confidence-building content</li><li>tailored nudges to get clients into their first position</li></ul><p><strong>4. Late Conversions Are Limited, Showing Urgency Matters</strong></p><p>While Australia does show some longer-tail conversion (8 - 30 days), late conversion remains low:</p><ul><li>After 30 days, conversion rates fall to 1% or lower across all stages</li><li>If the client does not fund or trade by Day 7 - 14, the likelihood drops sharply</li></ul><p><strong>CRM implication:</strong> Journeys must be front-loaded, with more behavioural triggers and high-value content in the first week.</p><p><strong>5. Activation Does Not Guarantee Engagement</strong></p><p>Despite account activation happening for ~66% of applicants, it does not strongly predict downstream engagement:</p><ul><li>Only 25% of activated clients fund</li><li>Only ~18% of activated clients trade</li></ul><p>This indicates that activation should be treated not as a milestone, but as the start of an engagement journey, requiring structured education and support.</p><p><strong>6. Funded Clients Are Eager but Need Direction</strong></p><p>A notable 8% trade on the same day they fund, showing:</p><ul><li>strong intent</li><li>momentum that CRM can leverage</li></ul><p>But because 82% still don\'t trade, there is a need to create:</p><ul><li>guided "first trade" experiences</li><li>demo → live conversion support</li><li>strategy education timed immediately after funding</li></ul><p>This is a high-value opportunity for incremental revenue.</p></div>',
+            JP: '<div class="content-section" style="margin-top: 30px;"><h4>Highlights</h4><ul><li>Triggered campaigns continue to dominate performance, with <strong>Japan Corporate achieving 72.81% open rate and 16.79% CTR</strong>, a significant uplift compared with last quarter\'s triggered CTR of <strong>2-2.4%</strong>.</li><li>Japan\'s main triggered sends maintain very strong engagement (<strong>65.86% opens; 7.37% CTR</strong>), up significantly from last quarter\'s ~2% CTR.</li><li>Manual delivery rates remain exceptionally strong (<strong>99.62-99.85%</strong>), similar to last quarter\'s high deliverability (97-99%).</li><li>JP Welcome Journey conversion rates remain stable, with <strong>Normal Value Fund</strong> and <strong>Pre-Fund</strong> paths showing strong activation and trading conversions, consistent with last quarter\'s performance.</li><li>Corporate audiences show consistently higher engagement across all metrics, signalling strong affinity for targeted, high-value content.</li><li>JP triggered sends outperform AU and Singapore in CTR, reinforcing Japan\'s appetite for structured, high-information communications.</li></ul></div><div class="content-section"><h4>Areas for Improvement</h4><ul><li>Manual CTR remains critically low (<strong>0.22% for Japan and 0.92% for Japan Corporate</strong>), showing minimal quarter-on-quarter improvement from last quarter\'s <0.1%.</li><li>Open rates on manual sends declined quarter-on-quarter (from ~37-41% last quarter to <strong>40.27%</strong> this quarter), signalling potential content fatigue.</li><li>The High Value Fund journey still delivers strong ROI but <strong>extremely low volume</strong> (22 entries vs 1 control entry), unchanged from last quarter, limiting total revenue contribution.</li><li>JP Welcome Journey "App Incomplete" shows only <strong>5.14% activation</strong>, slightly below control (<strong>6.25%</strong>) and similar to last quarter, indicating ongoing message misalignment.</li><li>Japan\'s unsubscribes rose significantly in triggered sends (from ~0.02-0.04% last quarter to <strong>0.08%</strong> this quarter), suggesting that behavioural triggers may need stronger frequency caps.</li><li>Japan Corporate CTR, while very high, may indicate overperformance due to smaller volume; broader audiences do not share the same uplift.</li></ul></div><div class="content-section"><h4>Next Steps</h4><p><strong><u>Short-term (0-3 months)</u></strong></p><ul><li>Redesign manual sends to improve CTR by adopting triggered-style structures:<ul><li>shorter modules</li><li>precise behavioural context</li><li>clearer "why now" messaging</li></ul></li><li>Reduce frequency for low-value manual audiences to counter rising unsubscribes.</li><li>Scale Japan Corporate learnings into mainstream Japan communications:<ul><li>detailed, information-rich formats</li><li>market-specific examples</li><li>concise outcomes-based CTAs</li></ul></li><li>Refresh JP Welcome Journey "App Incomplete" content with clearer next-action steps, reducing drop-off.</li></ul><p><strong><u>Mid-term (3-6 months)</u></strong></p><ul><li>Reassess High Value Fund entry criteria to increase eligible volume without reducing average CIPC.</li><li>Build personalised pre-fund education journeys mirroring competitor strategies in APAC, where "market access and education" content drives conversion.</li><li>Introduce language-optimised, context-sensitive micro-journeys for Japan\'s highly engaged corporate audience.</li><li>Explore AI-enhanced segmentation models to identify early high-value behavioural signals (aligned to JP market expectations for precision and detail).</li></ul></div><div class="content-section"><h4>Japan Funnel Stage Summary</h4><table class="benchmark-table funnel-summary"><thead><tr><th>Funnel Stage</th><th>Key Stats</th><th>Insight</th></tr></thead><tbody><tr><td>Application → Activation</td><td>- Same Day: 3.05%<br>- 1 day: 20.64%<br>- 2 days: 13.91%<br>- 3-7 days: 19.52%<br>- 8-30 days: 6.67%<br>- 31+ days: 0.65%<br>- <strong>No Activation: 35.56%</strong></td><td>A large share of applicants activate quickly - almost 58% within 1–2 days, and ~78% within a week. However, over one-third never activate, making this the first major point of drop-off in the Japan client journey.</td></tr><tr><td>Application → First Fund</td><td>- Same Day: 0.54%<br>- 1 day: 3.56%<br>- 2 days: 4.58%<br>- 3-7 days: 11.98%<br>- 8-30 days: 12.48%<br>- 31+ days: 7.26%<br>- <strong>No Fund: 59.60%</strong></td><td>Around 40% of applicants eventually fund. Funding occurs across a broad window, with a mix of early conversions (0-7 days) and a long-tail cohort (8-30+ days), showing that many clients take time before committing financially.</td></tr><tr><td>Application → First Trade</td><td>- Same Day: 0.34%<br>- 1 day: 2.44%<br>- 2 days: 3.24%<br>- 3-7 days: 10.60%<br>- 8-30 days: 13.19%<br>- 31+ days: 1.79%<br>- <strong>No Trade: 68.41%</strong></td><td>Trading behaviours show steady progression, with ~32% of applicants eventually placing a first trade. Activity is split between early conversions and gradual decision-makers over the first 30 days.</td></tr><tr><td>Activation → First Fund</td><td>- Same Day: 9.80%<br>- 1 day: 6.00%<br>- 2 days: 2.46%<br>- 3-7 days: 7.41%<br>- 8-30 days: 8.33%<br>- 31+ days: 6.41%<br>- <strong>No Fund: 59.60%</strong></td><td>Once a client activates, funding likelihood increases. There is a strong early-stage conversion cluster, but also consistent funding behaviour across 30 days. About 40% of activated clients fund.</td></tr><tr><td>Activation → First Trade</td><td>- Same Day: 6.78%<br>- 1 day: 4.58%<br>- 2 days: 2.31%<br>- 3-7 days: 7.73%<br>- 8-30 days: 8.99%<br>- 31+ days: 1.19%<br>- <strong>No Trade: 68.41%</strong></td><td>Around 32% of activated clients place a first trade. Trading is spread across the first 30 days, suggesting both fast-action and confidence-building behaviours.</td></tr><tr><td>First Fund → First Trade</td><td>- Same Day: 22.07%<br>- 1 day: 3.45%<br>- 2 days: 1.40%<br>- 3-7 days: 3.07%<br>- 8-30 days: 1.51%<br>- 31+ days: 0.13%<br>- <strong>No Trade: 68.41%</strong></td><td>Once funded, clients show strong intent - 22% trade on the same day. This creates a key opportunity for immediate, in-flow trading support and platform walkthroughs.</td></tr></tbody></table></div><div class="content-section"><h4>Overall Japan Funnel Insights</h4><p><strong>1. Early activation is strong, but non-activation remains the biggest leakage point</strong></p><ul><li>35.56% never activate.</li><li>This is the most substantial drop-off in the Japan funnel.</li><li>It suggests opportunities for: clearer onboarding instructions, reassurance content, simplified next-step nudges</li></ul><p><strong>2. Funding behaviours show a gradual commitment curve</strong></p><ul><li>Funding is not concentrated purely in the early stage.</li><li>Significant percentages fund at 3–7 days, 8–14 days, and 15–30 days.</li><li>This staggered pattern suggests clients in Japan may take more time to build trust or complete admin steps.</li></ul><p><strong>3. First Trade rates are healthy and span a long time window</strong></p><ul><li>Roughly one-third eventually trade.</li><li>Many clients trade after extended consideration (up to 30 days).</li><li>This indicates value in: ongoing education drip content, platform walkthroughs, confidence-building messaging</li></ul><p><strong>4. Funded clients show strong trade momentum</strong></p><ul><li>22% trade the same day as funding, showing high intent.</li><li>Clients who fund are primed for action and respond well to immediate prompts or platform cues.</li></ul><p><strong>5. Window of influence extends beyond the first week</strong></p><ul><li>Japan\'s funnel conversion curves highlight meaningful activity up to 30 days post-application, activation, or funding.</li><li>This makes Japan uniquely suited for: sustained nurture flows, multi-touch journeys, behavioural segmentation based on pace</li></ul></div>',
+            SG: '<div class="content-section" style="margin-top: 30px;"><h4>Highlights</h4><ul><li>Triggered sends significantly outperformed manual, with <strong>67.12% opens</strong> and <strong>4.68% CTR</strong>, showing a strong uplift from last quarter\'s triggered CTR (~0.5-0.6%).</li><li>Manual delivery rate improved quarter-on-quarter from <strong>90-95%</strong> last quarter to <strong>98.72%</strong> this quarter, indicating successful list hygiene improvements.</li><li>Spam complaint rates decreased from last quarter (<strong>~0.048%</strong>) to just <strong>0.005% (manual)</strong> and <strong>0.054% (triggered)</strong>, reducing overall deliverability risk.</li><li>Singapore triggered performance now matches or exceeds APAC competitors on open rate, showing strong message-market fit for reactive/behavioural journeys.</li><li>Unsubscribes remain within acceptable limits (<strong>0.21% triggered, 0.36% manual</strong>), indicating content relevance remains strong for key SG segments.</li></ul></div><div class="content-section"><h4>Areas for Improvement</h4><ul><li>Manual CTR remains low at <strong>0.62%</strong>, improved from last quarter (<0.1%), but still significantly below global fintech benchmarks (~4.9%).</li><li>Manual open rate (<strong>47.03%</strong>) has recovered QoQ but continues to trail triggered journeys by nearly 20 percentage points.</li><li>Spam complaints from triggered sends (<strong>0.054%</strong>) remain the highest among APAC markets this quarter, signalling sensitivity to message cadence or content type.</li><li>SG\'s unsub rate for manual sends (<strong>0.36%</strong>) is comparatively higher than Japan and Australia, suggesting message fatigue or over-frequency for certain segments.</li><li>Singapore continues to lack full onboarding journey visibility, limiting opportunities to optimise early-stage lifecycle paths.</li></ul></div><div class="content-section"><h4>Next Steps</h4><p><strong><u>Short-term (0-3 months)</u></strong></p><ul><li><strong>Model manual send content on triggered frameworks:</strong><ul><li>shorter modules</li><li>clear benefit-led CTAs</li><li>stronger "next action" drivers</li></ul></li><li><strong>Refine frequency for SG</strong>, especially for market update or promotional sends, to reduce spam sensitivity.</li><li><strong>Build SG-specific subject line testing</strong> to close the open-rate gap between manual and triggered campaigns.</li></ul><p><strong><u>Mid-term (3-6 months)</u></strong></p><ul><li>Introduce <strong>behaviour-led micro-journeys</strong> for:<ul><li>inactive leads</li><li>recently traded clients</li><li>high-risk (spam-sensitive) segments</li></ul></li><li>Implement <strong>content personalisation by trading intent</strong> (active traders vs learners) to improve CTR.</li><li>Develop a <strong>Singapore-specific compliance and trust pillar</strong> to differentiate IG against Singapore competitors who push high-volume promotional content.</li></ul></div><div class="content-section"><h4>Singapore Funnel Stage Summary</h4><table class="benchmark-table funnel-summary"><thead><tr><th>Funnel Stage</th><th>Key Stats</th><th>Insight</th></tr></thead><tbody><tr><td>Application → Activation</td><td>- Same Day: 67.44%<br>- 1 day: 5.32%<br>- 2 days: 2.17%<br>- 3-7 days: 3.38%<br>- 8-30 days: ~0.95%<br>- 31+ days: 0.09%<br>- <strong>No Activation: 20.66%</strong></td><td>Singapore shows exceptionally fast activation. Over 67% activate on the same day, with ~80% activated within 2 days. Activation is not a major drop-off point, meaning SG applicants take immediate action once they apply.</td></tr><tr><td>Application → First Fund</td><td>- Same Day: 25.46%<br>- 1 day: 8.35%<br>- 2 days: 3.46%<br>- 3-7 days: 5.81%<br>- 8-30 days: ~3.29%<br>- 31+ days: 0.47%<br>- <strong>No Fund: 53.15%</strong></td><td>SG applicants fund significantly earlier than other markets, with over 37% funding within 2 days. More than 46% fund in the first week, showing strong early intent. Slightly more than half still never fund, but early-stage funding is a clear strength.</td></tr><tr><td>Application → First Trade</td><td>- Same Day: 13.28%<br>- 1 day: 9.02%<br>- 2 days: 4.80%<br>- 3-7 days: 8.05%<br>- 8-30 days: ~5.16%<br>- 31+ days: 0.60%<br>- <strong>No Trade: 59.09%</strong></td><td>Trading behaviour begins early, with 27% trading within two days and 35% within a week. Trading interest declines sharply after 7 days. This indicates strong short-term trading readiness among applicants.</td></tr><tr><td>Activation → First Fund</td><td>- Same Day: 29.52%<br>- 1 day: 7.42%<br>- 2 days: 2.63%<br>- 3-7 days: 4.45%<br>- 8-30 days: ~2.48%<br>- 31+ days: 0.34%<br>- <strong>No Fund: 53.15%</strong></td><td>Funding post-activation is concentrated immediately, with 30% funding on the same day their account activates. After the first 3 days, conversion slows sharply. This confirms the need to prioritise same-day and next-day funding nudges.</td></tr><tr><td>Activation → First Trade</td><td>- Same Day: 15.71%<br>- 1 day: 8.87%<br>- 2 days: 4.24%<br>- 3-7 days: 7.14%<br>- 8-30 days: ~4.52%<br>- 31+ days: 0.43%<br>- <strong>No Trade: 59.09%</strong></td><td>More than 28% of activated clients trade within 2 days, and over 36% within the first week. After that, trade likelihood drops substantially. Trading intent is strongest immediately after activation.</td></tr><tr><td>First Fund → First Trade</td><td>- Same Day: 25.35%<br>- 1 day: 6.54%<br>- 2 days: 2.93%<br>- 3-7 days: 4.09%<br>- 8-30 days: ~1.89%<br>- 31+ days: 0.11%<br>- <strong>No Trade: 59.09%</strong></td><td>Funded Singapore clients show extremely strong trading intent. 25% trade on the same day they fund, and nearly 40% trade within a week. This is a very high conversion rate from funding to trading, highlighting decisive trading behaviour among SG clients.</td></tr></tbody></table></div><div class="content-section"><h4>Overall Singapore Funnel Insights</h4><p><strong>1. Singapore demonstrates the fastest early-stage engagement across all funnel stages</strong></p><ul><li>67% activate on the same day of application</li><li>More than 25% fund on the same day</li><li>13% trade on the same day</li></ul><p>These clients are highly action-oriented and respond well to immediate next-step prompts.</p><p><strong>2. Funding is front-loaded and highly time-sensitive</strong></p><ul><li>37%+ fund within two days, and</li><li>46% fund within a week</li></ul><p>If clients do not fund early, the probability of them funding later drops significantly (<3% after Day 7).</p><p>CRM must be heavily weighted toward first 48 hours.</p><p><strong>3. Trading conversion is high and happens quickly</strong></p><ul><li>27% trade within 2 days of application</li><li>~36% trade within a week</li><li>Over 25% of funded clients trade the same day they deposit</li></ul><p>This indicates strong confidence and readiness once a client funds, making SG one of the most momentum-driven markets.</p><p><strong>4. Major drop-off is concentrated at the "No Fund" and "No Trade" groups</strong></p><p>Despite strong early conversions:</p><ul><li>53% never fund</li><li>59% never trade</li></ul><p>These are the primary leakage points in the Singapore funnel.</p><p>However, unlike other markets, this is not due to slow decision-making, but rather a clear split between:</p><ul><li>clients who convert immediately, and</li><li>clients who do not convert at all.</li></ul><p>This suggests that Singapore clients either engage decisively, or disengage entirely.</p><p><strong>5. Singapore requires short, high-impact, early-stage journeys</strong></p><p>Because nearly all meaningful actions (activation, funding, trading) occur within:</p><ul><li>0–2 days → strongest window</li><li>0–7 days → secondary window</li><li>After 7 days → steep decline</li></ul><p>CRM strategy in Singapore must focus on:</p><ul><li>real-time triggers</li><li>same-day messaging</li><li>concise, action-driven content</li><li>app + platform onboarding that accelerates first funding/trade immediately</li></ul><p>Long drip-nurture journeys will have limited impact.</p></div>',
+            UAE: '<div class="content-section" style="margin-top: 30px;"><h4>Highlights</h4><ul><li>Triggered sends remain the strongest performers in UAE, with <strong>Dubai EN achieving 69.82% opens and 9.58% CTR</strong>, and <strong>Dubai AR achieving 55.57% opens and 16.37% CTR</strong>. Both represent substantial improvement on last quarter\'s triggered CTR (AR >2%, EN ~0.5–1%).</li><li>Manual delivery rates remain excellent (<strong>99.79% EN and 99.95% AR</strong>), matching or exceeding last quarter\'s strong deliverability (~98%).</li><li>UAE AR triggered campaigns show exceptional click performance (<strong>16.37% CTR</strong>), indicating strong relevance of Arabic-language behavioural flows.</li><li>Unsubscribe rates improved in EN triggered sends (<strong>0.18% vs 0.04% last quarter</strong> but still acceptably low in context of increased send volumes).</li><li>EN Welcome Journey activation rate remains high (<strong>29%</strong>), showing stable early-stage engagement QoQ.</li></ul></div><div class="content-section"><h4>Areas for Improvement</h4><p>Manual CTRs remain low:</p><ul><li><strong>Dubai EN: 0.56%</strong></li><li><strong>Dubai AR: 0.06%</strong></li></ul><p>These are marginally improved from last quarter (0.01–0.37%) but still significantly below fintech benchmark levels (~4–5%).</p><ul><li>Manual AR open rates fell slightly QoQ (<strong>37.75% vs last quarter\'s 19–39% range</strong>), indicating ongoing relevance challenges.</li><li>Arabic unsubscribes remain high in manual sends (<strong>1%</strong>), showing sensitivity to content tone, cultural alignment or send frequency.</li><li>Triggered AR unsubscribe rate increased to <strong>0.68%</strong>, compared with 0.33% peak last quarter, signalling the need to revisit cadence and sequence pacing.</li><li>The UAE Welcome Journeys show low trading volumes in several branches (EN and AR), particularly "Engage the Knowledgeable", indicating insufficient behavioural targeting for advanced traders.</li><li>Arabic journeys show excellent CTR but slow conversion, suggesting message sequencing may not align strongly with decision-making stages.</li></ul></div><div class="content-section"><h4>Next Steps</h4><p><strong><u>Short-term (0-3 months)</u></strong></p><ul><li>Refresh Arabic localisation across journeys and manual sends, focusing on:<ul><li>simplified language flow</li><li>culturally aligned examples</li><li>clearer value articulation</li></ul></li><li>Refine EN manual sends with sharp CTA design, clearer benefit framing and improved segmentation to lift CTR >1%.</li><li>Introduce frequency caps for Arabic triggered flows to reduce elevated unsubscribes.</li><li>Update segments in both EN and AR to differentiate between:<ul><li>education-seeking users</li><li>leverage-capable traders</li><li>high-value early-funded clients</li></ul></li><li>Refresh high-friction nodes in Welcome Journeys (e.g. Engage the Knowledgeable) by adding mobile-first explainer content and clearer prompts.</li></ul><p><strong><u>Mid-term (3-6 months)</u></strong></p><ul><li>Build UAE-specific behavioural micro-journeys, mapping to market expectations for compliant, educational and multi-asset messaging.</li><li>Reduce message length for AR flows, prioritising clarity and action steps to improve conversion from high CTR to funded/traded outcomes.</li></ul></div><div class="content-section"><h4>UAE Funnel Stage Summary</h4><table class="benchmark-table funnel-summary"><thead><tr><th>Funnel Stage</th><th>Key Stats</th><th>Insight</th></tr></thead><tbody><tr><td>Application → Activation</td><td>- Same Day: <strong>6.76%</strong><br>- 1 day: <strong>4.08%</strong><br>- 2 days: <strong>3.13%</strong><br>- 3-7 days: <strong>8.33%</strong><br>- 8-30 days: <strong>~2.96%</strong><br>- 31+ days: <strong>0.24%</strong><br>- <strong>No Activation: 74.50%</strong></td><td>The UAE has <strong>extremely low activation rates</strong>, with only <strong>~25% activating at all</strong>. Three-quarters never activate, making this the biggest funnel leak. Most of the successful activations happen between <strong>3–7 days</strong>, indicating slower engagement after application.</td></tr><tr><td>Application → First Fund</td><td>- Same Day: <strong>0.72%</strong><br>- 1 day: <strong>1.34%</strong><br>- 2 days: <strong>0.86%</strong><br>- 3-7 days: <strong>3.13%</strong><br>- 8-30 days: <strong>~2.99%</strong><br>- 31+ days: <strong>0.67%</strong><br>- <strong>No Fund: 90.31%</strong></td><td>Only <strong>~10% of UAE applicants ever fund</strong>, and funding is spread thinly across all time brackets. No strong early-intent spike appears. This indicates significant barriers around trust, readiness, or onboarding clarity.</td></tr><tr><td>Application → First Trade</td><td>- Same Day: <strong>0.31%</strong><br>- 1 day: <strong>0.76%</strong><br>- 2 days: <strong>0.57%</strong><br>- 3-7 days: <strong>2.20%</strong><br>- 8-30 days: <strong>~2.82%</strong><br>- 31+ days: <strong>0.88%</strong><br>- <strong>No Trade: 92.45%</strong></td><td>Only <strong>~7.5% of all applicants ever trade</strong>. Trading behaviours are low and slow, showing hesitation, lack of confidence, or barriers to platform readiness.</td></tr><tr><td>Activation → First Fund</td><td>- Same Day: <strong>2.72%</strong><br>- 1 day: <strong>1.77%</strong><br>- 2 days: <strong>0.74%</strong><br>- 3-7 days: <strong>2.05%</strong><br>- 8-30 days: <strong>~2.48%</strong><br>- 31+ days: <strong>0.38%</strong><br>- <strong>No Fund: 90.31%</strong></td><td>Even after activation, <strong>only ~10% fund</strong>, matching the applicant-level funding rate. This shows that activation in UAE does not reliably drive readiness to deposit - stronger funding motivation is needed <em>after</em> activation.</td></tr><tr><td>Activation → First Trade</td><td>- Same Day: <strong>1.17%</strong><br>- 1 day: <strong>1.36%</strong><br>- 2 days: <strong>0.45%</strong><br>- 3-7 days: <strong>1.84%</strong><br>- 8-30 days: <strong>~2.10%</strong><br>- 31+ days: <strong>0.62%</strong><br>- <strong>No Trade: 92.45%</strong></td><td>Trading after activation remains limited, with only <strong>~7.5% moving to trade</strong>. Small activity pockets appear over 7–30 days, suggesting more drawn-out decision cycles.</td></tr><tr><td>First Fund → First Trade</td><td>- Same Day: <strong>3.87%</strong><br>- 1 day: <strong>1.17%</strong><br>- 2 days: <strong>0.48%</strong><br>- 3-7 days: <strong>0.93%</strong><br>- 8-30 days: <strong>~0.83%</strong><br>- 31+ days: <strong>0.19%</strong><br>- <strong>No Trade: 92.52%</strong></td><td>Even among the small group who fund, <strong>only ~7.5% go on to trade</strong>. The largest drop-off in UAE is after funding - funded users still do not enter the platform to place their first trade.</td></tr></tbody></table></div><div class="content-section"><h4>Overall UAE Funnel Insights (Quarter)</h4><p><strong>1. Non-activation is the biggest structural gap in the UAE funnel</strong></p><ul><li><strong>74.5% never activate</strong>, the highest non-activation rate observed among your markets.</li><li>This places a heavy burden on CRM to:<ul><li>simplify onboarding steps</li><li>reduce friction (ID doc reminders, clearer KYC guidance)</li><li>reassure around safety and compliance</li></ul></li></ul><p>The largest opportunity for UAE growth is <strong>improving activation</strong>.</p><p><strong>2. Funding conversions are critically low at every stage</strong></p><ul><li><strong>Only 10% fund</strong> (from both application and activation start points).</li><li>Funding is not concentrated in early days - instead, it is scattered and low-volume.</li><li>This suggests:<ul><li>low perceived readiness</li><li>trust concerns</li><li>unclear value proposition</li><li>onboarding friction around payments</li></ul></li></ul><p>Targeted funding education, reassurance, and funding-method clarity are essential.</p><p><strong>3. Trading conversion is minimal, indicating confidence gaps</strong></p><ul><li><strong>92.45% never trade</strong>, even among those who fund.</li><li>Low first-trade numbers suggest:<ul><li>platform unfamiliarity</li><li>fear of loss</li><li>uncertainty around next steps</li></ul></li></ul><p>Trading support needs to be far more structured, visual, and simplified.</p><p><strong>4. UAE clients have slow, delayed decision cycles</strong></p><p>Unlike SG or AU, the UAE funnel shows:</p><ul><li>small conversion segments spread across <strong>3–30 days</strong></li><li>little same-day action</li><li>slow progression between stages</li></ul><p>This pattern suggests UAE clients need:</p><ul><li>multi-step education</li><li>more nurturing</li><li>sequential safety reassurance</li><li>more guided onboarding touchpoints</li></ul><p><strong>5. The biggest revenue opportunity is improving post-fund trading behaviour</strong></p><p>Even once funded:</p><ul><li><strong>92.5% do not trade</strong></li></ul><p>This is the sharpest drop-off in the UAE funnel.</p><p>Strong opportunities exist in:</p><ul><li>"first-trade accelerator" sequences</li><li>simplified platform walkthroughs</li><li>risk-free practice trade encouragement (e.g., demo-to-live bridging)</li><li>highlighting popular instruments among UAE traders</li></ul></div>'
+        };
+
+        function updateDisplay(country) {
+            var d = data[country];
+            if (!d) return;
+            
+            var el = function(id) { return document.getElementById(id); };
+            if (el('crm-delivered')) el('crm-delivered').textContent = d.displayDelivered;
+            if (el('crm-opens')) el('crm-opens').textContent = d.displayOpens;
+            if (el('crm-clicks')) el('crm-clicks').textContent = d.displayClicks;
+            if (el('crm-unsubs')) el('crm-unsubs').textContent = d.displayUnsubs;
+            if (el('crm-spam')) el('crm-spam').textContent = d.displaySpam;
+            if (el('crm-delivery-rate')) el('crm-delivery-rate').textContent = d.deliveryRate.toFixed(1) + '%';
+            if (el('crm-open-rate')) el('crm-open-rate').textContent = d.openRate.toFixed(1) + '%';
+            if (el('crm-click-rate')) el('crm-click-rate').textContent = d.clickRate.toFixed(1) + '%';
+            if (el('crm-unsub-rate')) el('crm-unsub-rate').textContent = d.unsubRate.toFixed(2) + '%';
+            if (el('crm-spam-rate')) el('crm-spam-rate').textContent = d.spamRate.toFixed(2) + '%';
+
+            updateFunnel(country);
+            
+            var container = el('crm-content-container');
+            if (container) { container.innerHTML = content[country] || ''; }
+        }
+
+        function updateFunnel(country) {
+            var d = data[country];
+            var container = document.getElementById('crmFunnel');
+            if (!container || !d) return;
+            
+            var funnelData = [
+                { label: 'Total Sent', value: d.sent, percentage: 100, width: 80 },
+                { label: 'Total Delivered', value: d.delivered, percentage: d.deliveryRate, width: 72 },
+                { label: 'Total Opens', value: d.opens, percentage: d.openRate, width: 55 },
+                { label: 'Unique Clicks', value: d.clicks, percentage: d.clickRate, width: 35 },
+                { label: 'Total Unsubs', value: d.unsubs, percentage: d.unsubRate, width: 22 }
+            ];
+            
+            container.innerHTML = funnelData.map(function(step) {
+                var marginLeft = (100 - step.width) / 2;
+                return '<div class="funnel-step" style="width: ' + step.width + '%; margin-left: ' + marginLeft + '%;"><span class="funnel-label">' + step.label + '</span><span class="funnel-value">' + step.value.toLocaleString() + '<span class="funnel-percentage">' + step.percentage.toFixed(1) + '%</span></span></div>';
+            }).join('');
+        }
+
+        function showCountry(country) {
+            var tabs = document.querySelectorAll('#crm .performance-tab');
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            if (event && event.target) { event.target.classList.add('active'); }
+            updateDisplay(country);
+        }
+
+        function init() {
+            var tabs = document.querySelectorAll('#crm .performance-tab');
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            if (tabs[0]) { tabs[0].classList.add('active'); }
+            updateDisplay('all');
+        }
+
+        return { showCountry: showCountry, init: init };
+    })();
+
+    // ========== ORGANIC GROWTH MODULE (IIFE) ==========
+    var ORGANIC = (function() {
+        var data = {
+            seo: {
+                q1: { all: { visits: 1780000, apps: 1323, fts: 370, content: 120 }, AU: { visits: 348000, apps: 433, fts: 98, content: 25 }, JP: { visits: 1000000, apps: 353, fts: 204, content: 14 }, SG: { visits: 131000, apps: 133, fts: 43, content: 55 }, UAE: { visits: 298000, apps: 404, fts: 25, content: 26 } },
+                q2: { all: { visits: 2053035, apps: 1394, fts: 409, content: 172, visitsPct: 15, appsPct: 8, ftsPct: 9 }, AU: { visits: 323111, apps: 447, fts: 142, content: 59, ranking: 67, visitsPct: -7, appsPct: 4, ftsPct: 39 }, JP: { visits: 1231727, apps: 367, fts: 173, content: 14, ranking: 54, visitsPct: 23, appsPct: 8, ftsPct: -15 }, SG: { visits: 118747, apps: 163, fts: 59, content: 53, ranking: 73, visitsPct: -9, appsPct: 25, ftsPct: 34 }, UAE: { visits: 379450, apps: 417, fts: 35, content: 46, ranking: 73, visitsPct: 28, appsPct: 6, ftsPct: 35 } }
+            },
+            aso: {
+                q1: {
+                    ios: { all: { visits: 1850000, downloads: 13200, cvr: 0.72 }, AU: { visits: 434000, downloads: 4700, cvr: 1.08 }, JP: { visits: 332000, downloads: 5300, cvr: 1.61 }, SG: { visits: 656000, downloads: 2500, cvr: 0.37 }, UAE: { visits: 433000, downloads: 761, cvr: 0.32 } },
+                    android: { all: { visits: 12000, downloads: 3300, cvr: 37.4 }, AU: { visits: 2100, downloads: 1100, cvr: 54.2 }, JP: { visits: 6400, downloads: 952, cvr: 21.6 }, SG: { visits: 2300, downloads: 720, cvr: 30.9 }, UAE: { visits: 1100, downloads: 482, cvr: 42.7 } }
+                },
+                q2: {
+                    ios: { all: { visits: 1298627, downloads: 15858, cvr: 1.24, visitsPct: -30, downloadsPct: 20, cvrPct: 0.52 }, AU: { visits: 443430, downloads: 5887, cvr: 1.32, visitsPct: 2, downloadsPct: 26, cvrPct: 0.24 }, JP: { visits: 390716, downloads: 5397, cvr: 1.40, visitsPct: 18, downloadsPct: 2, cvrPct: -0.21 }, SG: { visits: 364759, downloads: 3187, cvr: 1.26, visitsPct: -44, downloadsPct: 29, cvrPct: 0.89 }, UAE: { visits: 99722, downloads: 1387, cvr: 1.39, visitsPct: -77, downloadsPct: 82, cvrPct: 1.07 } },
+                    android: { all: { visits: 8446, downloads: 3025, cvr: 35.83, visitsPct: -30, downloadsPct: -8, cvrPct: -1.52 }, AU: { visits: 2299, downloads: 1046, cvr: 45.10, visitsPct: 10, downloadsPct: -8, cvrPct: -9.11 }, JP: { visits: 2649, downloads: 838, cvr: 31.76, visitsPct: -59, downloadsPct: -12, cvrPct: 10.16 }, SG: { visits: 2156, downloads: 664, cvr: 30.85, visitsPct: -8, downloadsPct: -8, cvrPct: -0.03 }, UAE: { visits: 1342, downloads: 477, cvr: 35.61, visitsPct: 18, downloadsPct: -1, cvrPct: -7.09 } }
+                }
+            }
+        };
+
+        function fmtNum(n) {
+            if (n >= 1000000) return (n / 1000000).toFixed(2) + 'M';
+            if (n >= 1000) return (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'K';
+            return n.toLocaleString();
+        }
+
+        function fmtPct(p, suffix) {
+            suffix = suffix || '% QoQ';
+            var sign = p >= 0 ? '↑' : '↓';
+            return sign + ' ' + Math.abs(p) + suffix;
+        }
+
+        function pctClass(p) { return p >= 0 ? 'positive' : 'negative'; }
+
+        function updateSEOMetrics(market) {
+            var d = data.seo.q2[market];
+            if (!d) return;
+            var el = function(id) { return document.getElementById(id); };
+            if (el('seo-traffic')) el('seo-traffic').textContent = fmtNum(d.visits);
+            if (el('seo-apps')) el('seo-apps').textContent = fmtNum(d.apps);
+            if (el('seo-fts')) el('seo-fts').textContent = d.fts.toLocaleString();
+            if (el('seo-content')) el('seo-content').textContent = d.content;
+            if (d.visitsPct !== undefined && el('seo-traffic-change')) {
+                el('seo-traffic-change').textContent = fmtPct(d.visitsPct);
+                el('seo-traffic-change').className = 'metric-change ' + pctClass(d.visitsPct);
+            }
+            if (d.appsPct !== undefined && el('seo-apps-change')) {
+                el('seo-apps-change').textContent = fmtPct(d.appsPct);
+                el('seo-apps-change').className = 'metric-change ' + pctClass(d.appsPct);
+            }
+            if (d.ftsPct !== undefined && el('seo-fts-change')) {
+                el('seo-fts-change').textContent = fmtPct(d.ftsPct);
+                el('seo-fts-change').className = 'metric-change ' + pctClass(d.ftsPct);
+            }
+        }
+
+        function updateASOMetrics(market) {
+            var ios = data.aso.q2.ios[market];
+            var android = data.aso.q2.android[market];
+            if (!ios || !android) return;
+            var el = function(id) { return document.getElementById(id); };
+            if (el('aso-ios-visits')) el('aso-ios-visits').textContent = fmtNum(ios.visits);
+            if (el('aso-ios-downloads')) el('aso-ios-downloads').textContent = fmtNum(ios.downloads);
+            if (el('aso-ios-cvr')) el('aso-ios-cvr').textContent = ios.cvr.toFixed(2) + '%';
+            if (el('aso-ios-visits-change')) { el('aso-ios-visits-change').textContent = fmtPct(ios.visitsPct); el('aso-ios-visits-change').className = 'metric-change ' + pctClass(ios.visitsPct); }
+            if (el('aso-ios-downloads-change')) { el('aso-ios-downloads-change').textContent = fmtPct(ios.downloadsPct); el('aso-ios-downloads-change').className = 'metric-change ' + pctClass(ios.downloadsPct); }
+            if (el('aso-ios-cvr-change')) { el('aso-ios-cvr-change').textContent = fmtPct(ios.cvrPct, 'pp'); el('aso-ios-cvr-change').className = 'metric-change ' + pctClass(ios.cvrPct); }
+            if (el('aso-android-visits')) el('aso-android-visits').textContent = fmtNum(android.visits);
+            if (el('aso-android-downloads')) el('aso-android-downloads').textContent = fmtNum(android.downloads);
+            if (el('aso-android-cvr')) el('aso-android-cvr').textContent = android.cvr.toFixed(2) + '%';
+            if (el('aso-android-visits-change')) { el('aso-android-visits-change').textContent = fmtPct(android.visitsPct); el('aso-android-visits-change').className = 'metric-change ' + pctClass(android.visitsPct); }
+            if (el('aso-android-downloads-change')) { el('aso-android-downloads-change').textContent = fmtPct(android.downloadsPct); el('aso-android-downloads-change').className = 'metric-change ' + pctClass(android.downloadsPct); }
+            if (el('aso-android-cvr-change')) { el('aso-android-cvr-change').textContent = fmtPct(android.cvrPct, 'pp'); el('aso-android-cvr-change').className = 'metric-change ' + pctClass(android.cvrPct); }
+        }
+
+        function renderBarChart(metric, type) {
+            var maxVal = Math.max(metric.q1, metric.q2);
+            var scale = maxVal * 1.2;
+            var h1 = Math.max(8, Math.round((metric.q1 / scale) * 110));
+            var h2 = Math.max(8, Math.round((metric.q2 / scale) * 110));
+            var pClass = metric.pct >= 0 ? 'positive' : 'negative';
+            var pSign = metric.pct >= 0 ? '+' : '';
+            return '<div class="qtc-chart-card"><div class="qtc-chart-title">' + type + ' — ' + metric.label + '</div><div class="qtc-bars"><div class="qtc-bar q1" style="height:' + h1 + 'px;"><span class="qtc-val">' + fmtNum(metric.q1) + '</span><span class="qtc-bar-label">Q1</span></div><div class="qtc-bar q2" style="height:' + h2 + 'px;"><span class="qtc-val">' + fmtNum(metric.q2) + '</span><span class="qtc-pct ' + pClass + '">' + pSign + metric.pct + '%</span><span class="qtc-bar-label">Q2</span></div></div></div>';
+        }
+
+        function renderSEOQTC(market) {
+            var q1 = data.seo.q1[market];
+            var q2 = data.seo.q2[market];
+            var container = document.getElementById('seo-qtc-charts-' + market);
+            var trendsContainer = document.getElementById('seo-trends-' + market);
+            if (!container || !q1 || !q2) return;
+            var metrics = [
+                { label: 'Traffic', q1: q1.visits, q2: q2.visits, pct: q2.visitsPct },
+                { label: 'Applications', q1: q1.apps, q2: q2.apps, pct: q2.appsPct },
+                { label: 'First Trades', q1: q1.fts, q2: q2.fts, pct: q2.ftsPct }
+            ];
+            container.innerHTML = metrics.map(function(m) { return renderBarChart(m, 'SEO'); }).join('');
+            if (trendsContainer) {
+                var trends = metrics.map(function(m) { return 'SEO ' + m.label + ': ' + (m.pct >= 0 ? '+' : '') + m.pct + '%'; });
+                trendsContainer.innerHTML = '<h4>Key Trends</h4><ul>' + trends.map(function(t) { return '<li>' + t + '</li>'; }).join('') + '</ul>';
+            }
+        }
+
+        function renderASOQTC(market) {
+            var q1ios = data.aso.q1.ios[market];
+            var q2ios = data.aso.q2.ios[market];
+            var q1and = data.aso.q1.android[market];
+            var q2and = data.aso.q2.android[market];
+            var container = document.getElementById('aso-qtc-charts-' + market);
+            var trendsContainer = document.getElementById('aso-trends-' + market);
+            if (!container || !q1ios || !q2ios || !q1and || !q2and) return;
+            var metrics = [
+                { label: 'iOS Visits', q1: q1ios.visits, q2: q2ios.visits, pct: q2ios.visitsPct },
+                { label: 'iOS Downloads', q1: q1ios.downloads, q2: q2ios.downloads, pct: q2ios.downloadsPct },
+                { label: 'Android Visits', q1: q1and.visits, q2: q2and.visits, pct: q2and.visitsPct },
+                { label: 'Android Downloads', q1: q1and.downloads, q2: q2and.downloads, pct: q2and.downloadsPct }
+            ];
+            container.innerHTML = metrics.map(function(m) { return renderBarChart(m, 'ASO'); }).join('');
+            if (trendsContainer) {
+                var trends = [
+                    'iOS Visits: ' + (q2ios.visitsPct >= 0 ? '+' : '') + q2ios.visitsPct + '%; Downloads: ' + (q2ios.downloadsPct >= 0 ? '+' : '') + q2ios.downloadsPct + '%',
+                    'Android Visits: ' + (q2and.visitsPct >= 0 ? '+' : '') + q2and.visitsPct + '%; Downloads: ' + (q2and.downloadsPct >= 0 ? '+' : '') + q2and.downloadsPct + '%'
+                ];
+                trendsContainer.innerHTML = '<h4>Key Trends</h4><ul>' + trends.map(function(t) { return '<li>' + t + '</li>'; }).join('') + '</ul>';
+            }
+        }
+
+        function showSubSection(subSection) {
+            var tabs = document.querySelectorAll('.sub-nav-tab');
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            if (event && event.target) { event.target.classList.add('active'); }
+            document.querySelectorAll('.sub-section-content').forEach(function(s) { s.classList.remove('active'); });
+            var section = document.getElementById('organic-' + subSection);
+            if (section) { section.classList.add('active'); }
+            
+            if (subSection === 'seo') {
+                var seoTabs = document.querySelectorAll('#organic-seo .country-tab');
+                seoTabs.forEach(function(t) { t.classList.remove('active'); });
+                if (seoTabs[0]) seoTabs[0].classList.add('active');
+                document.querySelectorAll('#organic-seo .country-content').forEach(function(c) { c.classList.remove('active'); });
+                var seoAll = document.getElementById('seo-content-all');
+                if (seoAll) seoAll.classList.add('active');
+                updateSEOMetrics('all');
+                renderSEOQTC('all');
+            } else {
+                var asoTabs = document.querySelectorAll('#organic-aso .country-tab');
+                asoTabs.forEach(function(t) { t.classList.remove('active'); });
+                if (asoTabs[0]) asoTabs[0].classList.add('active');
+                document.querySelectorAll('#organic-aso .country-content').forEach(function(c) { c.classList.remove('active'); });
+                var asoAll = document.getElementById('aso-content-all');
+                if (asoAll) asoAll.classList.add('active');
+                updateASOMetrics('all');
+                renderASOQTC('all');
+            }
+        }
+
+        function showSEOCountry(market) {
+            var tabs = document.querySelectorAll('#organic-seo .country-tab');
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            if (event && event.target) { event.target.classList.add('active'); }
+            document.querySelectorAll('#organic-seo .country-content').forEach(function(c) { c.classList.remove('active'); });
+            var content = document.getElementById('seo-content-' + market);
+            if (content) { content.classList.add('active'); }
+            updateSEOMetrics(market);
+            renderSEOQTC(market);
+        }
+
+        function showASOCountry(market) {
+            var tabs = document.querySelectorAll('#organic-aso .country-tab');
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            if (event && event.target) { event.target.classList.add('active'); }
+            document.querySelectorAll('#organic-aso .country-content').forEach(function(c) { c.classList.remove('active'); });
+            var content = document.getElementById('aso-content-' + market);
+            if (content) { content.classList.add('active'); }
+            updateASOMetrics(market);
+            renderASOQTC(market);
+        }
+
+        function init() {
+            var seoTabs = document.querySelectorAll('#organic-seo .country-tab');
+            seoTabs.forEach(function(t) { t.classList.remove('active'); });
+            if (seoTabs[0]) seoTabs[0].classList.add('active');
+            var asoTabs = document.querySelectorAll('#organic-aso .country-tab');
+            asoTabs.forEach(function(t) { t.classList.remove('active'); });
+            if (asoTabs[0]) asoTabs[0].classList.add('active');
+            updateSEOMetrics('all');
+            renderSEOQTC('all');
+            updateASOMetrics('all');
+            renderASOQTC('all');
+        }
+
+        return { showSubSection: showSubSection, showSEOCountry: showSEOCountry, showASOCountry: showASOCountry, init: init };
+    })();
+
+    // ========== INITIALISATION ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        CRM.init();
+    });
+    </script>
+<script>// ============================================
+// SOCIAL MEDIA Q2 FY26 - ISOLATED MODULE
+// ============================================
+(function() {
+  'use strict';
+
+  // Data
+  const SMQ2Data = {
+    all: {
+      q2: { audience: 201025, engagements: 756940, rate: 0.4, clicks: 501522 },
+      q1: { audience: 190647, engagements: 280346, rate: 0.3, clicks: 217235 },
+      variance: { audience: 5.4, engagements: 170, rate: 9.1, clicks: 130.9 },
+      mom: {
+        sep: { audience: 199330, audienceVar: 4.6, engagements: 233450, engagementsVar: 56.2, rate: 0.5, rateVar: 68.3, clicks: 147469, clicksVar: 23.2 },
+        oct: { audience: 202867, audienceVar: 1.8, engagements: 345819, engagementsVar: 48.1, rate: 0.4, rateVar: 33.3, clicks: 217137, clicksVar: 47.2 },
+        nov: { audience: 199370, audienceVar: -1.7, engagements: 177660, engagementsVar: 48.6, rate: 0.3, rateVar: 22.2, clicks: 177660, clicksVar: -48.6 }
+      },
+      overview: "In Q2, we shifted focus from audience building to engagement efficacy, delivering 130.9% growth in link clicks – our primary conversion metric. This quality-over-quantity approach proved transformative: despite audiences 95% smaller than competitors, we now match their total engagement through superior efficiency (80 engagements per post vs their 30.1).",
+      overview2: "From a market perspective, the quarter revealed four distinct models that work:",
+      overviewList: [
+        "<strong>Singapore</strong> built steady momentum through AI/tech content and monthly giveaways (+151.4% link clicks with consistent monthly performance).",
+        "<strong>UAE's</strong> daily market intelligence combined with paid amplification created predictable growth (+77.5% link clicks, steady 20-30% monthly increases).",
+        "<strong>Japan's</strong> integrated campaigns delivered explosive peaks (+438.1% link clicks) but highlighted sustainability challenges with a 92.7% November decline.",
+        "<strong>Australia</strong> navigated team transition while maintaining YouTube excellence (10.8M views)."
+      ],
+      overview3: "Our competitive position strengthened significantly, matching competitors' 5,342 total engagements with our 6,287 despite their 20x larger audiences. This efficiency advantage positions us to gain market share through smarter content rather than scale.",
+      metricsList: [
+        "<strong>Audience Growth:</strong> +5.4% (total 201,025)",
+        "<strong>Engagement:</strong> +170% to 756,940",
+        "<strong>Average Engagement Rate:</strong> 0.4% (+9.1% vs Q1)",
+        "<strong>Post Link Clicks:</strong> +130.9% to 501,522"
+      ],
+      contentIntro: "Our divisional shift from generic education to real-world aspirations resonated across all markets. For the first time, every market adopted divisional content, with increasing requests for our education arm as we demonstrate tangible value.",
+      contentWins: "Three strategic wins defined Q2. First, platform-specific strategies outperformed one-size-fits-all content – LinkedIn's milestone content achieved 15% engagement rates while YouTube's evolution to shorter, clearer formats drove millions of views. Second, thematic consistency proved powerful – Singapore's focus on AI/tech/robotics and UAE's market intelligence positioning created clear brand associations. Third, integrated campaigns can achieve viral scale – Japan's celebrity endorsements and ¥50,000 cashbacks generated 234,169 engagements, though sustaining this remains challenging.",
+      competitor: "<p><strong>Market Position:</strong> With 13,763 average followers versus competitors' 278,191, we generate 166% higher engagement rates. This positions us as the nimble challenger disrupting through quality rather than competing on reach.</p><p><strong>Competitive Dynamics:</strong> Rakuten's 94,197 engagements from a single giveaway and eToro's 2.4M audience demonstrate the scale challenge. However, their lower engagement rates (30.1 per post) reveal vulnerability – they rely on size while we build connection.</p><p><strong>Strategic Opportunity:</strong> Maintaining current efficiency while scaling audience by just 50% would position us as market leader in engagement efficacy. The data proves our content model works; now it needs amplification.</p>",
+      risks: "<p><strong>Risks:</strong></p><ul><li>Japan: 92.7% drop post-campaign → over-reliance on promotions</li><li>LinkedIn underused → missing 179% engagement upside</li><li>Australia: Sponsorship content not converting to link clicks</li></ul><p><strong>Challenges:</strong></p><ul><li>Engagement dips between promo cycles</li><li>Need stronger balance of organic + paid</li><li>Wide performance gaps across markets</li></ul><p><strong>Strategic Action:</strong></p><ul><li>Scale UAE's proven paid amplification model</li><li>Increase video output across all markets</li><li>Make LinkedIn a core channel, not optional</li></ul><p style=\"margin-top: 16px;\">The path forward is clear: systematise what works, eliminate what doesn't, and scale proven models across markets.</p>",
+      deckLinks: [
+        { label: "📊 Sep: APAC Social Assets", url: "https://iggroup.sharepoint.com/:p:/s/APACMEDIVISIONALMARKETING/IQA3r1wJBNePSp-RBxxzTQNgAWSbXTIUK4W0BtZ-RFrY9wc?e=Oz0Ifz" },
+        { label: "📊 Oct: APAC Social Assets", url: "https://iggroup.sharepoint.com/:p:/s/APACMEDIVISIONALMARKETING/IQA1seiGZJ48Q7FjVYJd9gJcAdt2QueKErc9AdibUbDCxAU?e=IhDAzr" },
+        { label: "📊 Nov: APAC Social QA", url: "https://iggroup.sharepoint.com/:p:/s/APACMEDIVISIONALMARKETING/IQBXUq2r4iPDQIuE2yHJKMsSAbovMqjyS38zvYt1wdmJkCc?e=lNcSUY" }
+      ],
+      showImages: true,
+      showCompetitor: true,
+      showRisks: true
+    },
+    AU: {
+      q2: { audience: 39285, engagements: 66945, rate: 0.6, clicks: 37249 },
+      q1: { audience: 39164, engagements: 53493, rate: 0.5, clicks: 39497 },
+      variance: { audience: 0.3, engagements: 25.1, rate: 15.4, clicks: -5.7 },
+      mom: {
+        sep: { audience: 34794, audienceVar: 0.3, engagements: 21642, engagementsVar: -28.8, rate: 0.6, rateVar: 36.7, clicks: 12993, clicksVar: -39.9 },
+        oct: { audience: 39158, audienceVar: 0.2, engagements: 24331, engagementsVar: 7, rate: 0.6, rateVar: 14.3, clicks: 12418, clicksVar: 4.4 },
+        nov: { audience: 39283, audienceVar: 0.3, engagements: 19852, engagementsVar: -18.4, rate: 0.5, rateVar: -19.7, clicks: 11827, clicksVar: -4.8 }
+      },
+      overview: "Australia transitioned to a new market-level social content team this quarter. As expected, we saw some performance attrition while the team establishes its KPIs, strategy and content goals. This is expected to stabilise going forward. Despite significant content investment in the England Cricket Team sleeve sponsorship aligned with the Ashes, link clicks declined across the quarter (-39.9%, +4.4%, -4.8% month-on-month). However, YouTube performance remained a standout, with 10.8M video views – driven primarily by the paid campaign series for $0 commission.",
+      contentBody: "<ul><li><strong>Performance:</strong> Engagement up, link clicks down 5.7%.</li><li><strong>Key Success Factors:</strong> Strong sporting alignment and brand visibility.</li><li><strong>Learning:</strong> Long-term brand equity needs to be paired with direct-response tactics for measurable action.</li><li><strong>Key Insight:</strong> Australia produces high-quality content (evidenced by strong YouTube performance) but struggles with action-oriented mechanics. The market responds to quality over quantity - LinkedIn's 20.9% engagement rate from just 7 posts shows that targeted content outperforms volume.</li></ul>",
+      risks: "<p>There is a risk of a momentum gap as the team finds its rhythm. To address this, we recommend focusing on quick wins by leaning on proven performers, such as YouTube paid campaigns, while continuing to build team capability. Evergreen content can be used to fill gaps and maintain performance metrics in the meantime.</p>",
+      contentLinks: []
+    },
+    JP: {
+      q2: { audience: 116163, engagements: 272899, rate: 0.3, clicks: 129652 },
+      q1: { audience: 108128, engagements: 29864, rate: 0.2, clicks: 24095 },
+      variance: { audience: 7.4, engagements: 813.8, rate: 43.9, clicks: 438.1 },
+      mom: {
+        sep: { audience: 115783, audienceVar: 7.1, engagements: 112529, engagementsVar: 392.1, rate: 0.6, rateVar: 141.2, clicks: 55330, clicksVar: 171.4 },
+        oct: { audience: 118621, audienceVar: 2.5, engagements: 151228, engagementsVar: 34.4, rate: 0.3, rateVar: -41.7, clicks: 69329, clicksVar: 25.3 },
+        nov: { audience: 116163, audienceVar: -2.1, engagements: 9186, engagementsVar: -93.9, rate: 0.1, rateVar: -84.1, clicks: 5027, clicksVar: -92.7 }
+      },
+      overview: "Japan's Q2 represents the value in integrated campaign execution, achieving astronomical growth: 4,521.2% increase in video views, 624.1% audience growth surge, and 234,169 total engagements. The quarter featured three strategic pillars: September's major omnichannel brand campaign with celebrity endorsements promoting share investment integration, October's aggressive IG Securities acquisition drive offering up to ¥50,000 cashback for new accounts, and sustained thought leadership through Senior Market Analyst Junichi Ishikawa during gold volatility. However, November's sharp decline (-93.9% engagements, -92.7% link clicks) revealed the challenge of maintaining momentum post-campaign.",
+      contentBody: "<ul><li><strong>Performance:</strong> 438.1% link click growth, 234,169 engagements, 43M YouTube views, but November decline of -92.7%.</li><li><strong>Key Success Factors:</strong> Social proof through celebrity endorsements, ¥50,000 cashback incentives, omnichannel campaign execution, regular analyst insights in volatility periods.</li><li><strong>Learning:</strong> Multi-layered campaigns (brand + acquisition + thought leadership) deliver exceptional peaks but require sustained investment to avoid dramatic drops.</li><li><strong>Key Insight:</strong> Japan proves that integrated campaigns can achieve viral scale. However, the 93.9% November engagement collapse shows even sophisticated strategies struggle to maintain momentum without continuous promotional support.</li></ul>",
+      risks: "<p>Our key challenge is sustaining engagement between major campaign bursts and converting that engagement into action; to address this, we recommend building \"campaign echo\" content that extends key messages and package analyst insights into shareable formats to deepen relevance and drive follow-through.</p>",
+      contentLinks: [{ label: "🎬 YouTube Campaign", url: "https://www.youtube.com/watch?v=N333riJK9ZA" }]
+    },
+    SG: {
+      q2: { audience: 28280, engagements: 255295, rate: 0.3, clicks: 210626 },
+      q1: { audience: 26511, engagements: 93260, rate: 0.4, clicks: 83784 },
+      variance: { audience: 6.7, engagements: 173.7, rate: -2.2, clicks: 151.4 },
+      mom: {
+        sep: { audience: 27239, audienceVar: 2.7, engagements: 53792, engagementsVar: 14.4, rate: 0.5, rateVar: 53.6, clicks: 43962, clicksVar: -1.9 },
+        oct: { audience: 27699, audienceVar: 1.7, engagements: 103282, engagementsVar: 92, rate: 0.3, rateVar: -39.1, clicks: 85220, clicksVar: 93.8 },
+        nov: { audience: 28280, audienceVar: 2.1, engagements: 100212, engagementsVar: -3, rate: 0.4, rateVar: 26.1, clicks: 83179, clicksVar: -2.4 }
+      },
+      overview: "Singapore continues to take a holistic, brand-building approach to social media. The market team is focused on demystifying IG through newsworthy, relatable and resonant content, using video to bring clarity and position IG Singapore as first-in-class for newer investors. AI, tech and robotics have emerged as priority themes, with video content and competitions aligning strongly to these interests. Singapore achieved 151.4% link click growth with remarkable consistency. The market's 184.2% impression increase, and 194.1% video view growth demonstrate successful audience expansion alongside engagement depth.",
+      contentBody: "<ul><li><strong>Performance:</strong> 151.4% link click growth, 243,620 Facebook engagements, 184.2% impression increase, 194.1% video view growth.</li><li><strong>Key Success Factors:</strong> Holistic brand-building through AI/tech/robotics themed content, monthly tech giveaways aligning with priority themes, LinkedIn pivot to milestone/community content (15.0% engagement rate), YouTube podcast format with cross-platform cutdowns.</li><li><strong>Learning:</strong> Demystifying complex products through relatable video content while maintaining premium positioning (via tech giveaways) creates sustainable engagement. Platform-specific strategies (e.g. LinkedIn's vs YouTube's podcast evolution) outperform one-size-fits-all content.</li><li><strong>Key Insight:</strong> Singapore proves that educational sophistication drives conversion – shifting from brand-led to audience-centric messaging on LinkedIn, shorter clearer YouTube content, and thematic consistency around AI/tech/robotics demonstrates that newer investors respond to clarity over complexity.</li></ul>",
+      risks: "<p>Singapore's key challenges include maintaining authenticity while scaling production, balancing promotional and educational content, and expanding beyond a tech-savvy audience. To address this, we recommend diversifying content with exclusive experiences beyond giveaways, implementing full-funnel analytics to demonstrate ROI, and establishing a 12-month content plan that balances promotions with sustainable organic growth.</p>",
+      contentLinks: [
+        { label: "📸 Instagram Post", url: "https://www.instagram.com/p/DRddpKxiK_W/" },
+        { label: "💼 LinkedIn Post", url: "https://www.linkedin.com/posts/ig-singapore_igsingapore-igmarkets-investing-activity-7392103678368882688-INw4" },
+        { label: "🎬 YouTube Video", url: "https://www.youtube.com/watch?v=bPH8BwSkGdU" }
+      ]
+    },
+    UAE: {
+      q2: { audience: 17531, engagements: 161807, rate: 0.4, clicks: 123995 },
+      q1: { audience: 17077, engagements: 103741, rate: 0.3, clicks: 69859 },
+      variance: { audience: 2.7, engagements: 56, rate: 31.2, clicks: 77.5 },
+      mom: {
+        sep: { audience: 17233, audienceVar: 0.9, engagements: 44384, engagementsVar: 8.1, rate: 0.5, rateVar: 51.8, clicks: 35184, clicksVar: 7.2 },
+        oct: { audience: 17388, audienceVar: 0.9, engagements: 66978, engagementsVar: 50.9, rate: 0.5, rateVar: 6.3, clicks: 50170, clicksVar: 42.6 },
+        nov: { audience: 15877, audienceVar: -8.7, engagements: 51192, engagementsVar: -23.6, rate: 0.3, rateVar: -46.2, clicks: 39135, clicksVar: -22 }
+      },
+      overview: "UAE's Q2 demonstrated how consistent market intelligence content combined with strategic paid amplification can deliver sustainable growth. With 78.2% increase in link clicks and steady monthly progression, UAE's authority-driven model offers the most predictable growth trajectory. The market's success stems from daily market intelligence updates, the growing \"Trade of the Week\" YouTube series, and multilingual analyst content serving both expat and local communities. Facebook's dominance (124,306 link clicks, 161,153 engagements) combined with consistent paid amplification demonstrates effective channel optimisation for the regional audience.",
+      contentBody: "<ul><li><strong>Performance:</strong> 77.5% link click growth with steady monthly progression, 161,153 Facebook engagements, 12.5% LinkedIn engagement rate, 1.95M YouTube views.</li><li><strong>Key Success Factors:</strong> Consistent market intelligence content driving daily engagement, multilingual approach (English/Arabic) expanding reach, \"Trade of the Week\" YouTube series building viewership, strategic paid amplification delivering predictable 20-30% monthly growth.</li><li><strong>Learning:</strong> Combining evergreen educational content with timely market-specific insights creates consistent engagement. The multilingual strategy proves essential for capturing both expat and local audiences.</li><li><strong>Key Insight:</strong> UAE demonstrates that authority-driven content outperforms incentive-driven campaigns for sustainable growth. The market's success with daily market intel, weekly trade features, and consistent amplification shows that positioning as the trusted source for market intelligence drives more valuable engagement than sporadic promotions.</li></ul>",
+      risks: "<p>Key risks include heavy platform dependency, with 79% of performance coming from Facebook paid content, and rising paid media costs increasing 15–20% annually. Challenges include competing with established regional players and maintaining ROI as paid costs rise. To address these, we recommend reducing Facebook dependency to 60% by scaling LinkedIn, improving cost efficiency through dynamic bidding and dayparting, and investing in SEO-optimised content to drive organic growth and reduce reliance on paid media.</p>",
+      contentLinks: [
+        { label: "📸 Instagram 1", url: "https://www.instagram.com/p/DRB_gXsjxOY/" },
+        { label: "📸 Instagram 2", url: "https://www.instagram.com/p/DRU8v3LiVcL/" },
+        { label: "📸 Instagram 3", url: "https://www.instagram.com/p/DQwLNKkjAoE/" }
+      ]
+    }
+  };
+
+  // Chart instances
+  let smQ2Charts = { monthly: null, bar: null, doughnut: null, radar: null };
+
+  // Utility functions
+  function fmtNum(n) {
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(0) + 'K';
+    return n.toLocaleString();
+  }
+
+  function fmtVar(v) {
+    return (v >= 0 ? '↑ ' : '↓ ') + Math.abs(v) + '% vs Q1';
+  }
+
+  function varClass(v) {
+    return v >= 0 ? 'positive' : 'negative';
+  }
+
+  // Main display function
+  function updateSMQ2Display(country) {
+    const d = SMQ2Data[country];
+    if (!d) return;
+
+    // Update tab states
+    document.querySelectorAll('#social-q2-tabs .performance-tab').forEach(function(tab) {
+      tab.classList.toggle('active', tab.dataset.country === country);
+    });
+
+    // Metrics
+    document.getElementById('sm-q2-audience').textContent = fmtNum(d.q2.audience);
+    document.getElementById('sm-q2-engagements').textContent = fmtNum(d.q2.engagements);
+    document.getElementById('sm-q2-rate').textContent = d.q2.rate + '%';
+    document.getElementById('sm-q2-clicks').textContent = fmtNum(d.q2.clicks);
+
+    document.getElementById('sm-q2-audience-var').textContent = fmtVar(d.variance.audience);
+    document.getElementById('sm-q2-audience-var').className = 'metric-variance ' + varClass(d.variance.audience);
+    document.getElementById('sm-q2-engagements-var').textContent = fmtVar(d.variance.engagements);
+    document.getElementById('sm-q2-engagements-var').className = 'metric-variance ' + varClass(d.variance.engagements);
+    document.getElementById('sm-q2-rate-var').textContent = fmtVar(d.variance.rate);
+    document.getElementById('sm-q2-rate-var').className = 'metric-variance ' + varClass(d.variance.rate);
+    document.getElementById('sm-q2-clicks-var').textContent = fmtVar(d.variance.clicks);
+    document.getElementById('sm-q2-clicks-var').className = 'metric-variance ' + varClass(d.variance.clicks);
+
+    // Overview
+    document.getElementById('sm-q2-overview').textContent = d.overview;
+
+    var o2 = document.getElementById('sm-q2-overview-2');
+    var oList = document.getElementById('sm-q2-overview-list');
+    var o3 = document.getElementById('sm-q2-overview-3');
+
+    if (d.overview2) {
+      o2.style.display = 'block';
+      o2.textContent = d.overview2;
+    } else {
+      o2.style.display = 'none';
+    }
+
+    if (d.overviewList) {
+      oList.style.display = 'block';
+      oList.innerHTML = d.overviewList.map(function(i) { return '<li>' + i + '</li>'; }).join('');
+    } else {
+      oList.style.display = 'none';
+    }
+
+    if (d.overview3) {
+      o3.style.display = 'block';
+      o3.textContent = d.overview3;
+    } else {
+      o3.style.display = 'none';
+    }
+
+    // Metrics section
+    var mSec = document.getElementById('sm-q2-metrics-section');
+    if (d.metricsList) {
+      mSec.style.display = 'block';
+      document.getElementById('sm-q2-metrics-list').innerHTML = d.metricsList.map(function(i) { return '<li>' + i + '</li>'; }).join('');
+    } else {
+      mSec.style.display = 'none';
+    }
+
+    // Content section
+    var cBody = document.getElementById('sm-q2-content-body');
+    var imgGal = document.getElementById('sm-q2-image-gallery');
+    var linksTitle = document.getElementById('sm-q2-links-title');
+    var linksDiv = document.getElementById('sm-q2-content-links');
+
+    if (country === 'all') {
+      cBody.innerHTML = '<p>' + d.contentIntro + '</p><p>' + d.contentWins + '</p>';
+      imgGal.style.display = 'grid';
+      linksTitle.style.display = 'block';
+      linksTitle.textContent = 'Q2 Content Decks:';
+      linksDiv.style.display = 'flex';
+      linksDiv.innerHTML = d.deckLinks.map(function(l) {
+        return '<a href="' + l.url + '" target="_blank" class="sm-content-link">' + l.label + '</a>';
+      }).join('');
+    } else {
+      cBody.innerHTML = d.contentBody || '';
+      imgGal.style.display = 'none';
+      if (d.contentLinks && d.contentLinks.length > 0) {
+        linksTitle.style.display = 'block';
+        linksTitle.textContent = 'Featured Content:';
+        linksDiv.style.display = 'flex';
+        linksDiv.innerHTML = d.contentLinks.map(function(l) {
+          return '<a href="' + l.url + '" target="_blank" class="sm-content-link">' + l.label + '</a>';
+        }).join('');
+      } else {
+        linksTitle.style.display = 'none';
+        linksDiv.style.display = 'none';
+      }
+    }
+
+    // Competitor section
+    var compSec = document.getElementById('sm-q2-competitor-section');
+    if (country === 'all' && d.competitor) {
+      compSec.style.display = 'block';
+      document.getElementById('sm-q2-competitor-body').innerHTML = d.competitor;
+    } else {
+      compSec.style.display = 'none';
+    }
+
+    // Risks section
+    var riskSec = document.getElementById('sm-q2-risks-section');
+    if (d.risks) {
+      riskSec.style.display = 'block';
+      document.getElementById('sm-q2-risks-body').innerHTML = d.risks;
+    } else {
+      riskSec.style.display = 'none';
+    }
+
+    // MoM Table
+    updateSMQ2MoMTable(d.mom);
+
+    // Charts
+    updateSMQ2Charts(country, d);
+
+    // QTC visibility
+    document.getElementById('sm-q2-qtc-card').style.display = country === 'all' ? 'block' : 'none';
+  }
+
+  function updateSMQ2MoMTable(mom) {
+    var months = [
+      { key: 'sep', name: 'September 2025' },
+      { key: 'oct', name: 'October 2025' },
+      { key: 'nov', name: 'November 2025' }
+    ];
+
+    var html = '';
+    months.forEach(function(m) {
+      var r = mom[m.key];
+      html += '<tr>' +
+        '<td class="month-header">' + m.name + '</td>' +
+        '<td>' + fmtNum(r.audience) + ' <span class="sm-variance-badge ' + varClass(r.audienceVar) + '">' + (r.audienceVar >= 0 ? '+' : '') + r.audienceVar + '%</span></td>' +
+        '<td>' + fmtNum(r.engagements) + ' <span class="sm-variance-badge ' + varClass(r.engagementsVar) + '">' + (r.engagementsVar >= 0 ? '+' : '') + r.engagementsVar + '%</span></td>' +
+        '<td>' + r.rate + '% <span class="sm-variance-badge ' + varClass(r.rateVar) + '">' + (r.rateVar >= 0 ? '+' : '') + r.rateVar + '%</span></td>' +
+        '<td>' + fmtNum(r.clicks) + ' <span class="sm-variance-badge ' + varClass(r.clicksVar) + '">' + (r.clicksVar >= 0 ? '+' : '') + r.clicksVar + '%</span></td>' +
+        '</tr>';
+    });
+    document.getElementById('sm-q2-mom-tbody').innerHTML = html;
+  }
+
+  function updateSMQ2Charts(country, d) {
+    // Monthly trend chart
+    if (smQ2Charts.monthly) smQ2Charts.monthly.destroy();
+    var ctx1 = document.getElementById('smQ2MonthlyTrendChart');
+    if (ctx1) {
+      smQ2Charts.monthly = new Chart(ctx1.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: ['Sep 2025', 'Oct 2025', 'Nov 2025'],
+          datasets: [
+            { label: 'Engagements', data: [d.mom.sep.engagements, d.mom.oct.engagements, d.mom.nov.engagements], borderColor: '#E3252C', backgroundColor: 'rgba(227,37,44,0.1)', tension: 0.4, fill: true, yAxisID: 'y' },
+            { label: 'Link Clicks', data: [d.mom.sep.clicks, d.mom.oct.clicks, d.mom.nov.clicks], borderColor: '#28a745', backgroundColor: 'rgba(40,167,69,0.1)', tension: 0.4, fill: true, yAxisID: 'y' },
+            { label: 'Audience', data: [d.mom.sep.audience, d.mom.oct.audience, d.mom.nov.audience], borderColor: '#6c757d', tension: 0.4, fill: false, yAxisID: 'y1' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: { legend: { position: 'top' } },
+          scales: {
+            y: { type: 'linear', position: 'left', ticks: { callback: function(v) { return fmtNum(v); } } },
+            y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: function(v) { return fmtNum(v); } } }
+          }
+        }
+      });
+    }
+
+    if (country !== 'all') return;
+
+    // QTC Bar
+    if (smQ2Charts.bar) smQ2Charts.bar.destroy();
+    var ctx2 = document.getElementById('smQ2QtcBarChart');
+    if (ctx2) {
+      smQ2Charts.bar = new Chart(ctx2.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['Audience', 'Engagements', 'Link Clicks'],
+          datasets: [
+            { label: 'Q1', data: [d.q1.audience, d.q1.engagements, d.q1.clicks], backgroundColor: 'rgba(156,163,175,0.6)', borderColor: '#9ca3af', borderWidth: 2 },
+            { label: 'Q2', data: [d.q2.audience, d.q2.engagements, d.q2.clicks], backgroundColor: 'rgba(227,37,44,0.3)', borderColor: '#E3252C', borderWidth: 2 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { y: { beginAtZero: true, ticks: { callback: function(v) { return fmtNum(v); } } } }
+        }
+      });
+    }
+
+    // Doughnut
+    if (smQ2Charts.doughnut) smQ2Charts.doughnut.destroy();
+    var ctx3 = document.getElementById('smQ2QtcDoughnut');
+    if (ctx3) {
+      smQ2Charts.doughnut = new Chart(ctx3.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Q1 Engagements', 'Q2 Engagements', 'Q1 Clicks', 'Q2 Clicks'],
+          datasets: [{
+            data: [d.q1.engagements, d.q2.engagements, d.q1.clicks, d.q2.clicks],
+            backgroundColor: ['rgba(156,163,175,0.5)', 'rgba(227,37,44,0.5)', 'rgba(255,193,7,0.5)', 'rgba(40,167,69,0.5)'],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+
+    // Radar
+    if (smQ2Charts.radar) smQ2Charts.radar.destroy();
+    var ctx4 = document.getElementById('smQ2QtcRadar');
+    if (ctx4) {
+      smQ2Charts.radar = new Chart(ctx4.getContext('2d'), {
+        type: 'radar',
+        data: {
+          labels: ['Audience Reach', 'Engagement Volume', 'Click Performance', 'Engagement Rate', 'Growth Momentum'],
+          datasets: [
+            { label: 'Q1', data: [70, 40, 45, 60, 65], borderColor: '#9ca3af', backgroundColor: 'rgba(156,163,175,0.2)', borderWidth: 2 },
+            { label: 'Q2', data: [75, 95, 90, 70, 85], borderColor: '#E3252C', backgroundColor: 'rgba(227,37,44,0.2)', borderWidth: 2 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { r: { beginAtZero: true, max: 100 } }
+        }
+      });
+    }
+  }
+
+  // MoM toggle
+  function toggleSMQ2MoM() {
+    var content = document.getElementById('sm-q2-mom-table-content');
+    var icon = document.getElementById('sm-q2-mom-icon');
+    if (content && icon) {
+      content.classList.toggle('open');
+      icon.textContent = content.classList.contains('open') ? '▲' : '▼';
+    }
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', function() {
+    // Country tabs
+    document.querySelectorAll('#social-q2-tabs .performance-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        updateSMQ2Display(this.dataset.country);
+      });
+    });
+
+    // MoM toggle
+    var momHeader = document.getElementById('sm-q2-mom-header');
+    if (momHeader) {
+      momHeader.addEventListener('click', toggleSMQ2MoM);
+    }
+
+    // Initial display
+    updateSMQ2Display('all');
+  });
+
+})();</script>
+<!-- EDUCATION JAVASCRIPT MODULE (Add before closing </body> tag) -->
+<script>
+// ============================================================
+// EDUCATION MODULE - Q2 FY26
+// Isolated namespace to prevent conflicts with other sections
+// ============================================================
+const EDUCATION = (function() {
+    'use strict';
+    
+    // Q1 baseline data (from Q1 dashboard)
+    const Q1_BASELINE = {
+        all: { totalUsers: 18682, prospectUsers: 14731, sessions: 28835, demoSignups: 131, applications: 78, firstTrades: 405, ftCVR: 2.17, demoUsers: 9580, demoToApp: 78, demoToFT: 138, demoToFTCVR: 24.91 },
+        AU: { totalUsers: 5609, prospectUsers: 3984, sessions: 9020, demoSignups: 52, applications: 23, firstTrades: 80, ftCVR: 1.43, demoUsers: 3881, demoToApp: 28, demoToFT: 43, demoToFTCVR: 26.71 },
+        JP: { totalUsers: 8506, prospectUsers: 6825, sessions: 12853, demoSignups: 41, applications: 33, firstTrades: 260, ftCVR: 3.06, demoUsers: 3700, demoToApp: 32, demoToFT: 66, demoToFTCVR: 24.49 },
+        SG: { totalUsers: 2150, prospectUsers: 1679, sessions: 4033, demoSignups: 21, applications: 15, firstTrades: 55, ftCVR: 2.56, demoUsers: 1357, demoToApp: 15, demoToFT: 21, demoToFTCVR: 22.22 },
+        UAE: { totalUsers: 2432, prospectUsers: 2255, sessions: 2984, demoSignups: 17, applications: 7, firstTrades: 10, ftCVR: 0.41, demoUsers: 647, demoToApp: 3, demoToFT: 8, demoToFTCVR: 28.35 }
+    };
+
+    // Q2 data (verbatim from document)
+    const Q2_DATA = {
+        all: {
+            totalUsers: 19800, prospectUsers: 15435, sessions: 32121, demoSignups: 77, applications: 38, firstTrades: 450, ftCVR: 2.27, demoUsers: 10783, demoToApp: 32, demoToFT: 131, demoToFTCVR: 24.52,
+            overview: `<p>The quarter presents a tale of two funnels. Traffic and engagement metrics are healthy: total users grew 5.9%, sessions increased 11.2%, and first trades rose 11.1% to 450. The demo-to-first-trade conversion rate held steady at ~25%, proving the demo experience converts effectively when users reach it.</p>
+<p>However, the pathway to demo has collapsed. Demo signups fell 41.2% (131 to 77) and applications dropped 51.3% (78 to 38). This mid-funnel breakdown is strangling conversion potential. We're attracting more users but failing to move them toward demo accounts.</p>
+<p>By market: Japan dominates traffic (8,698 users) but converts poorly (2.07% FT CVR). Australia and Singapore show slightly stronger efficiency (2.65% and 2.77% FT CVR respectively). UAE grew users significantly but conversion lags at 1.56% FT CVR.</p>
+<p>Content patterns are clear: technical analysis content (especially candlestick patterns in Japan with 3,684 users) attracts browsers but converts at just 0.05%. Practical content like "Orders, execution and leverage" converts at 10-18% trader CVR across all markets.</p>`,
+            tableStructure: 'all',
+            highlights: `<strong>First trades up 11.1%:</strong> Improved, demonstrating underlying demand<br><br>
+<strong>Traffic growth sustained:</strong> Users (+5.9%) and sessions (+11.2%) show continued audience expansion<br><br>
+<strong>Demo conversion stable:</strong> 24.52% demo-to-first-trade CVR proves the demo experience works when users reach it<br><br>
+<strong>Content engagement strong:</strong> High-traffic pages attract significant audiences; Japan's candlestick content drew 3,684 users<br><br>
+<strong>Singapore leads efficiency:</strong> Highest FT CVR at 2.77% with 47.3% first trade growth`,
+            risks: `<strong>Continued demo decline threatens Q3:</strong> If demo signups remain suppressed, first trade growth will stall regardless of traffic gains<br><br>
+<strong>Application process may be broken:</strong> 51% decline suggests technical issues that could worsen without intervention<br><br>
+<strong>Japan dependency:</strong> Largest user base (44% of traffic) but lowest conversion efficiency; underperformance here drags regional results<br><br>
+<strong>November volatility:</strong> First trades dropped 42% month-on-month after strong October; unclear if seasonal or structural<br><br>
+<strong>UAE traffic quality:</strong> User growth (+5.9%) not translating to conversions (FT CVR fell from 2.17% to 1.56%)`,
+            challenges: `<strong>Demo signup collapse (-41.2%):</strong> Critical mid-funnel bottleneck limiting conversion potential across all markets<br><br>
+<strong>Applications halved (-51.3%):</strong> Demo-to-application pathway broken, requiring urgent diagnosis<br><br>
+<strong>High-traffic content doesn't convert:</strong> Japan's candlestick patterns page (3,684 users) converts at just 0.05% FT CVR<br><br>
+<strong>Gap between theory and practice content:</strong> Users consume educational content but don't progress to trading-focused pages<br><br>
+<strong>Mobile optimisation gaps:</strong> 53-63% of users are mobile but demo/application flows may not be mobile-optimised`,
+            recommendations: `<strong>Audit demo and application flows:</strong> Diagnose 41% demo decline and 51% application drop for technical or UX issues<br><br>
+<strong>Add demo CTAs to high-traffic content:</strong> Embed prompts in candlestick patterns, academy homepages and intro courses<br><br>
+<strong>Bridge theory to practice:</strong> Create pathways from technical analysis content (high traffic) to practical pages like "Orders, execution and leverage" (10-18% trader CVR)<br><br>
+<strong>Mobile-first demo experience:</strong> Align with 53-63% mobile usage; build multiple demo pathways rather than relying on single funnel`
+        },
+        AU: {
+            totalUsers: 5703, prospectUsers: 4091, sessions: 9426, demoSignups: 25, applications: 17, firstTrades: 151, ftCVR: 2.65, demoUsers: 4086, demoToApp: 10, demoToFT: 32, demoToFTCVR: 22.18,
+            overview: `<p>Australia delivered the region's standout result: first trades nearly doubled (+88.8%) while demo signups halved (-51.9%). This paradox reflects strong conversion from existing demo users rather than new pipeline growth - a pattern that risks Q3 performance if demo volume isn't restored.</p>
+<p>The demo-to-first-trade CVR held steady at 22%, proving the demo experience converts effectively. The IG Academy homepage drove 110 first trades (5.49% FT CVR), while short-form video content delivered the highest conversion rates (8-10% FT CVR). Device usage is balanced (52% mobile, 46% desktop), with demo trading heavily desktop-based (95.5%).</p>`,
+            tableStructure: 'market',
+            highlights: `<strong>First trades up 88.8%</strong> (80 to 151): Strongest growth in the region, nearly doubling quarter-on-quarter<br><br>
+<strong>FT CVR improved significantly:</strong> Jumped from 1.43% to 2.65% (+1.22pp), indicating better quality traffic<br><br>
+<strong>Demo-to-first-trade conversion stable at 22%:</strong> Demo experience continues to convert effectively<br><br>
+<strong>Short-form video content converts well:</strong> Shorts and short-video pages deliver 8-10% FT CVR<br><br>
+<strong>Demo users growing:</strong> Up 5.3% (3,881 to 4,086) despite signup decline, suggesting retained engagement`,
+            lowlightsAndChallenges: `<strong>Demo signups collapsed (-51.9%)</strong><br><br>
+<strong>Applications declined (-26.1%)</strong><br><br>
+<strong>High-traffic content not converting:</strong> Earnings season shorts (587 users) delivered 0% FT CVR<br><br>
+<strong>Academy homepage traffic declining:</strong> Top pages showing -24% to -28% user declines quarter-on-quarter<br><br>
+<strong>Conversion concentration risk:</strong> 73% of first trades (110 of 151) came from just one page (Academy homepage)`,
+            recommendationsAndActions: `<strong>Restore demo signup volume:</strong> Investigate 52% decline; add demo CTAs to high-traffic pages including Academy homepage (2,003 users) and courses page (1,080 users)<br><br>
+<strong>Scale short-form video content:</strong> Shorts format delivers 8-10% FT CVR; expand this content type and add to high-traffic, low-converting pages<br><br>
+<strong>Fix earnings season content:</strong> 587 users with 0% conversion indicates missing calls-to-action or content-to-demo bridges<br><br>
+<strong>Diversify conversion sources:</strong> Reduce dependency on Academy homepage; replicate its success factors (demo prompts, clear next steps) across other high-traffic pages`
+        },
+        JP: {
+            totalUsers: 8698, prospectUsers: 6809, sessions: 13677, demoSignups: 23, applications: 9, firstTrades: 180, ftCVR: 2.07, demoUsers: 3601, demoToApp: 15, demoToFT: 55, demoToFTCVR: 27.14,
+            overview: `<p>Japan remains the region's largest market (44% of traffic) but delivered the weakest conversion performance in Q2. First trades fell 30.8% (260 to 180) despite stable user numbers, and applications collapsed 72.7% (33 to 9). This points to a fundamental disconnect between content consumption and trading action.</p>
+<p>The core problem is visible in the content data: the candlestick patterns page attracts 3,684 users but converts at just 0.05% FT CVR - generating only 2 first trades. Meanwhile, practical content like "Orders, execution and leverage" (234 users) converts at 11.11% FT CVR. Japan has a traffic-to-conversion bridge problem, not a traffic problem.</p>
+<p>Demo-to-first-trade CVR improved to 27.14% (+2.65pp), proving the demo experience works when users reach it. The bottleneck is getting users from educational content to demo. Device usage shows 72% mobile for browsing but 93% desktop for demo trading - a potential friction point.</p>`,
+            tableStructure: 'market',
+            highlights: `<strong>Largest user base in region:</strong> 8,698 users (44% of APAC traffic), up 2.3% quarter-on-quarter<br><br>
+<strong>Session growth of 6.4%:</strong> Users engaging more with content (12,853 to 13,677 sessions)<br><br>
+<strong>Demo-to-FT CVR improved to 27.14%:</strong> Up 2.65pp, highest in region - demo experience converts effectively<br><br>
+<strong>Practical content converts well:</strong> "Orders, execution and leverage" delivers 11.11% FT CVR; "What spreads mean for traders" delivers 12.36% FT CVR<br><br>
+<strong>Strong trader retention:</strong> 524 traders active in Academy, 6.02% trader CVR`,
+            lowlightsAndChallenges: `<strong>First trades down 30.8%</strong> (260 to 180)<br><br>
+<strong>Applications collapsed 72.7%</strong> (33 to 9)<br><br>
+<strong>Demo signups down 43.9%</strong> (41 to 23)<br><br>
+<strong>High-traffic content doesn't convert:</strong> Candlestick patterns page (3,684 users) converts at just 0.05% FT CVR<br><br>
+<strong>Device mismatch:</strong> 72% of users browse on mobile but 93% of demo trades happen on desktop - potential friction in the journey<br><br>
+<strong>November decline:</strong> First trades dropped 21% month-on-month (71 to 56) after strong October`,
+            recommendationsAndActions: `<strong>Bridge technical content to practical pages:</strong> Add "try this strategy" CTAs on candlestick patterns page linking to "Orders, execution and leverage" content which converts at 11.11%<br><br>
+<strong>Audit application process:</strong> 72.7% decline requires urgent investigation for technical or UX issues blocking conversions<br><br>
+<strong>Add demo prompts to high-traffic pages:</strong> Candlestick patterns (3,684 users), chart patterns (408 users), and moving averages (302 users) all lack conversion pathways<br><br>
+<strong>Address mobile-to-desktop friction:</strong> 72% browse on mobile but demo trading is 93% desktop - test mobile-optimised demo experiences or clearer "continue on desktop" prompts`
+        },
+        SG: {
+            totalUsers: 2928, prospectUsers: 2307, sessions: 5550, demoSignups: 10, applications: 7, firstTrades: 81, ftCVR: 2.77, demoUsers: 2330, demoToApp: 4, demoToFT: 33, demoToFTCVR: 24.38,
+            overview: `<p>Singapore is the region's efficiency leader, delivering strong growth across traffic, conversions, and first trades. Users grew 36.2%, sessions jumped 37.6%, and first trades increased 47.3% (55 to 81). The market achieves the highest FT CVR in the region at 2.77%.</p>
+<p>The demo journey is effective: demo-to-first-trade CVR improved to 24.38%, and demo users grew 71.7%. However, the same mid-funnel problem affecting the region appears here - demo signups fell 52.4% and applications dropped 53.3%. Despite this, Singapore's conversion efficiency means it still grew first trades significantly.</p>
+<p>Content performance shows clear winners: the Academy homepage delivers 6.74% FT CVR (62 first trades), and practical content like "Orders, execution and leverage" converts at 11.39% FT CVR. Earnings season shorts (531 users) converted at 0%, matching the pattern seen in Australia. Device usage is balanced (56% mobile, 42% desktop), with demo trading predominantly desktop-based (91.5%).</p>`,
+            tableStructure: 'market',
+            highlights: `<strong>First trades up 47.3%</strong> (55 to 81): Strongest percentage growth in region<br><br>
+<strong>Highest FT CVR in region at 2.77%:</strong> Up 0.21pp, demonstrating efficient conversion<br><br>
+<strong>User growth of 36.2%:</strong> Significant audience expansion outpacing other markets<br><br>
+<strong>Demo-to-first-trade CVR improved to 24.38%:</strong> Demo experience converting effectively<br><br>
+<strong>Demo users up 71.7%:</strong> Strong growth in demo engagement (1,357 to 2,330)<br><br>
+<strong>Practical content converts well:</strong> "Orders, execution and leverage" at 11.39% FT CVR; "What is an order" at 12% FT CVR`,
+            lowlightsAndChallenges: `<strong>Demo signups down 52.4%</strong> (21 to 10): Mid-funnel bottleneck threatens future pipeline<br><br>
+<strong>Applications collapsed 73.3%</strong> (15 to 4): Demo-to-application pathway broken<br><br>
+<strong>November decline:</strong> First trades dropped 21.1% month-on-month (38 to 15) after strong October<br><br>
+<strong>Earnings season content not converting:</strong> 531 users with 0% FT CVR - missing conversion pathways<br><br>
+<strong>Login errors high:</strong> "login_error" is second most common demo interaction (946 users), suggesting friction`,
+            recommendationsAndActions: `<strong>Investigate demo signup decline:</strong> 52% drop requires audit of signup flow and CTAs on high-traffic pages<br><br>
+<strong>Fix earnings season content:</strong> Add demo CTAs and next-step prompts to the 531-user page currently converting at 0%<br><br>
+<strong>Address login errors:</strong> 946 users experiencing login errors in demo - resolve technical issues to reduce friction<br><br>
+<strong>Scale high-converting content formats:</strong> Replicate "Orders, execution and leverage" structure (11.39% FT CVR) across other practical topics`
+        },
+        UAE: {
+            totalUsers: 2503, prospectUsers: 2250, sessions: 3556, demoSignups: 19, applications: 5, firstTrades: 39, ftCVR: 1.56, demoUsers: 769, demoToApp: 3, demoToFT: 11, demoToFTCVR: 26.04,
+            overview: `<p>UAE delivered the strongest first trade growth in the region at +290%, with FT CVR. Unlike other markets, demo signups grew (+11.8%), though from a small base. The challenge is scale: 39 first trades is still the lowest absolute number in the region, and applications dropped 28.6% (7 to 5). The Academy homepage drives results with 1,497 users at 2.4% FT CVR (36 first trades), while non-farm payrolls shorts (157 users) delivered 0% FT CVR - another example of topical content lacking conversion pathways. Notably, UAE demo trading is 92% mobile, unique in the region.</p>`,
+            tableStructure: 'market',
+            highlights: `<strong>First trades up 290%</strong> (10 to 39): Strongest growth rate in region, nearly quadrupling quarter-on-quarter<br><br>
+<strong>FT CVR improved significantly:</strong> Jumped from 0.41% to 1.56% (+1.15pp), indicating better conversion efficiency<br><br>
+<strong>Demo signups grew 11.8%:</strong> Only market in region with demo signup growth (17 to 19)<br><br>
+<strong>Session growth of 19.2%:</strong> Users engaging more deeply with content (2,984 to 3,556)<br><br>
+<strong>Demo-to-FT CVR strong at 26.04%:</strong> Demo experience converts effectively when users reach it<br><br>
+<strong>Demo users up 18.9%:</strong> Growing demo engagement (647 to 769)`,
+            lowlightsAndChallenges: `<strong>39 first trades</strong> is the lowest number in region despite strong growth rate<br><br>
+<strong>Applications dropped 28.6%</strong> (7 to 5): Demo-to-application pathway weak<br><br>
+<strong>Prospect users flat (-0.2%):</strong> Not attracting new qualified prospects despite session growth<br><br>
+<strong>Non-farm payrolls content not converting:</strong> 157 users with 0% FT CVR - missing conversion pathways<br><br>
+<strong>Low trader CVR at 1.64%:</strong> Lowest in region, indicating quality or intent issues with traffic`,
+            recommendationsAndActions: `<strong>Scale what's working:</strong> Demo account page converts at 5.76% FT CVR - increase visibility and traffic to this page<br><br>
+<strong>Add CTAs to non-farm payrolls content:</strong> 157 users with 0% conversion needs demo prompts and next-step guidance<br><br>
+<strong>Investigate application drop:</strong> 28.6% decline with only 5 applications total requires UX review<br><br>
+<strong>Leverage mobile-first demo experience:</strong> UAE is 92% mobile for demo trading (unique in region) - ensure mobile demo flow is optimised`
+        }
+    };
+
+    // Chart instances
+    let charts = { user: null, funnel: null, change: null };
+
+    // Utility function
+    function formatNumber(num) {
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+        return num.toLocaleString();
+    }
+
+    // Update metrics display
+    function updateMetrics(country) {
+        const data = Q2_DATA[country];
+        document.getElementById('edu-total-users').textContent = formatNumber(data.totalUsers);
+        document.getElementById('edu-prospect-users').textContent = formatNumber(data.prospectUsers);
+        document.getElementById('edu-sessions').textContent = formatNumber(data.sessions);
+        document.getElementById('edu-demo-signups').textContent = data.demoSignups.toLocaleString();
+        document.getElementById('edu-applications').textContent = data.applications.toLocaleString();
+        document.getElementById('edu-first-trades').textContent = data.firstTrades.toLocaleString();
+        document.getElementById('edu-ft-cvr').textContent = data.ftCVR.toFixed(2) + '%';
+        document.getElementById('edu-demo-users').textContent = formatNumber(data.demoUsers);
+        document.getElementById('edu-demo-to-app').textContent = data.demoToApp.toLocaleString();
+        document.getElementById('edu-demo-to-ft').textContent = data.demoToFT.toLocaleString();
+        document.getElementById('edu-demo-ft-cvr').textContent = data.demoToFTCVR.toFixed(2) + '%';
+    }
+
+    // Update content sections
+    function updateContent(country) {
+        const data = Q2_DATA[country];
+        document.getElementById('edu-overview').innerHTML = data.overview;
+        
+        let tableHTML = '';
+        if (data.tableStructure === 'all') {
+            tableHTML = `<table>
+                <thead><tr><th style="width: 20%;">Performance Insights</th><th style="width: 80%;">Details</th></tr></thead>
+                <tbody>
+                    <tr class="highlight-section"><td style="font-weight: 600; color: #28a745;">Highlights</td><td>${data.highlights}</td></tr>
+                    <tr class="risk-section"><td style="font-weight: 600; color: #c62828;">Risks</td><td>${data.risks}</td></tr>
+                    <tr class="challenge-section"><td style="font-weight: 600; color: #ff9800;">Challenges</td><td>${data.challenges}</td></tr>
+                    <tr class="recommendation-section"><td style="font-weight: 600; color: #2196f3;">Recommendations</td><td>${data.recommendations}</td></tr>
+                </tbody>
+            </table>`;
+        } else {
+            tableHTML = `<table>
+                <thead><tr><th style="width: 20%;">Performance Insights</th><th style="width: 80%;">Details</th></tr></thead>
+                <tbody>
+                    <tr class="highlight-section"><td style="font-weight: 600; color: #28a745;">Highlights</td><td>${data.highlights}</td></tr>
+                    <tr class="lowlight-section"><td style="font-weight: 600; color: #ff9800;">Lowlights and challenges</td><td>${data.lowlightsAndChallenges}</td></tr>
+                    <tr class="recommendation-section"><td style="font-weight: 600; color: #2196f3;">Recommendations and actions</td><td>${data.recommendationsAndActions}</td></tr>
+                </tbody>
+            </table>`;
+        }
+        document.getElementById('edu-performance-table').innerHTML = tableHTML;
+    }
+
+    // Toggle QTC visibility
+    function toggleQTC(country) {
+        const qtcSection = document.getElementById('edu-qtc-section');
+        const competitorSection = document.getElementById('edu-competitor-section');
+        if (country === 'all') {
+            qtcSection.classList.remove('edu-qtc-hide');
+            competitorSection.style.display = 'block';
+            renderCharts();
+        } else {
+            qtcSection.classList.add('edu-qtc-hide');
+            competitorSection.style.display = 'none';
+        }
+    }
+
+    // Render QTC charts
+    function renderCharts() {
+        Object.values(charts).forEach(chart => { if (chart) chart.destroy(); });
+        const q1 = Q1_BASELINE.all;
+        const q2 = Q2_DATA.all;
+
+        const userCtx = document.getElementById('eduQtcUser').getContext('2d');
+        charts.user = new Chart(userCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Total Users', 'Prospect Users', 'Sessions', 'Demo Users'],
+                datasets: [
+                    { label: 'FY26 Q1', data: [q1.totalUsers, q1.prospectUsers, q1.sessions, q1.demoUsers], backgroundColor: 'rgba(51, 51, 51, 0.7)', borderColor: '#333333', borderWidth: 2, borderRadius: 8 },
+                    { label: 'FY26 Q2', data: [q2.totalUsers, q2.prospectUsers, q2.sessions, q2.demoUsers], backgroundColor: 'rgba(227, 37, 44, 0.7)', borderColor: '#E3252C', borderWidth: 2, borderRadius: 8 }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { padding: 12, font: { size: 12, weight: '600' } } }, tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', callbacks: { label: (ctx) => ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() } } }, scales: { y: { beginAtZero: true, ticks: { callback: (v) => v.toLocaleString() } }, x: { grid: { display: false } } } }
+        });
+
+        const funnelCtx = document.getElementById('eduQtcFunnel').getContext('2d');
+        charts.funnel = new Chart(funnelCtx, {
+            type: 'line',
+            data: {
+                labels: ['Demo Signups', 'Demo to App', 'Applications', 'Demo to FT', 'First Trades'],
+                datasets: [
+                    { label: 'FY26 Q1', data: [q1.demoSignups, q1.demoToApp, q1.applications, q1.demoToFT, q1.firstTrades], borderColor: '#333333', backgroundColor: 'rgba(51, 51, 51, 0.1)', tension: 0.4, borderWidth: 3, pointRadius: 5, pointBackgroundColor: '#333333' },
+                    { label: 'FY26 Q2', data: [q2.demoSignups, q2.demoToApp, q2.applications, q2.demoToFT, q2.firstTrades], borderColor: '#E3252C', backgroundColor: 'rgba(227, 37, 44, 0.1)', tension: 0.4, borderWidth: 3, pointRadius: 5, pointBackgroundColor: '#E3252C' }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { padding: 12, font: { size: 12, weight: '600' } } }, tooltip: { backgroundColor: 'rgba(0,0,0,0.8)' } }, scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } }
+        });
+
+        const changeLabels = ['First Trades', 'Sessions', 'Demo Users', 'Total Users', 'Prospect Users', 'FT CVR (pp)', 'Demo Signups', 'Applications', 'Demo to App', 'Demo to FT', 'Demo to FT CV% (pp)'];
+        const changePct = [
+            ((q2.firstTrades - q1.firstTrades) / q1.firstTrades * 100),
+            ((q2.sessions - q1.sessions) / q1.sessions * 100),
+            ((q2.demoUsers - q1.demoUsers) / q1.demoUsers * 100),
+            ((q2.totalUsers - q1.totalUsers) / q1.totalUsers * 100),
+            ((q2.prospectUsers - q1.prospectUsers) / q1.prospectUsers * 100),
+            (q2.ftCVR - q1.ftCVR),
+            ((q2.demoSignups - q1.demoSignups) / q1.demoSignups * 100),
+            ((q2.applications - q1.applications) / q1.applications * 100),
+            ((q2.demoToApp - q1.demoToApp) / q1.demoToApp * 100),
+            ((q2.demoToFT - q1.demoToFT) / q1.demoToFT * 100),
+            (q2.demoToFTCVR - q1.demoToFTCVR)
+        ];
+
+        const changeCtx = document.getElementById('eduQtcChange').getContext('2d');
+        charts.change = new Chart(changeCtx, {
+            type: 'bar',
+            data: {
+                labels: changeLabels,
+                datasets: [{ label: 'Change', data: changePct.map(v => parseFloat(v.toFixed(2))), backgroundColor: (ctx) => (ctx.parsed.x >= 0 ? 'rgba(40, 167, 69, 0.7)' : 'rgba(220, 53, 69, 0.7)'), borderColor: (ctx) => (ctx.parsed.x >= 0 ? '#28a745' : '#dc3545'), borderWidth: 2, borderRadius: 8 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', callbacks: { label: (ctx) => { const val = ctx.parsed.x; const lbl = ctx.label; if (lbl.includes('(pp)')) { return (val >= 0 ? '+' : '') + val.toFixed(2) + 'pp'; } return (val >= 0 ? '+' : '') + val.toFixed(1) + '%'; } } } }, scales: { x: { ticks: { callback: (v) => v + '%' } }, y: { grid: { display: false } } } }
+        });
+    }
+
+    // Show country data
+    function showCountry(country) {
+        const tabs = document.querySelectorAll('#education .performance-tab');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+        updateMetrics(country);
+        updateContent(country);
+        toggleQTC(country);
+    }
+
+    // Initialize
+    function init() {
+        updateMetrics('all');
+        updateContent('all');
+        toggleQTC('all');
+    }
+
+    return { showCountry: showCountry, init: init };
+})();
+
+// Initialize Education section when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    EDUCATION.init();
+});
+</script>
+</body>
+</html>
